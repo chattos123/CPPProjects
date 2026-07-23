@@ -1,0 +1,73 @@
+Clean rebuild  
+Delete the entire build/ folder again, then run: cmake -G Ninja -B build -DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe -DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe
+cmake --build build
+
+
+# 1. Remove any old build directory
+rm -rf build
+
+# 2. Configure the project with Ninja as the generator
+cmake -G Ninja -B build \
+  -DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe \
+  -DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe
+
+# 3. Build the project
+cmake --build build
+
+
+Release:
+# 1. Clean out old build files
+rm -rf build
+
+# 2. Configure with Ninja generator, specifying Release build
+cmake -G Ninja -B build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe \
+  -DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe
+
+# 3. Build the project
+cmake --build build
+
+
+Notes
+-DCMAKE_BUILD_TYPE=Release enables compiler optimizations and disables debug symbols.
+
+If you want to keep both Debug and Release builds side‑by‑side, you can use separate build folders (e.g., build-debug and build-release).
+
+Example:
+cmake -G Ninja -B build-release -DCMAKE_BUILD_TYPE=Release ...
+cmake --build build-release
+
+
+Multi config
+# 1. Clean old build directory
+rm -rf build
+
+# 2. Configure with Ninja Multi-Config
+cmake -G "Ninja Multi-Config" -B build \
+  -DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe \
+  -DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe
+
+# 3. Build Debug configuration
+cmake --build build --config Debug
+
+# 4. Build Release configuration
+cmake --build build --config Release
+
+
+Executables don’t overwrite each other. In CMake, you do this by setting the RUNTIME_OUTPUT_DIRECTORY property per configuration.
+
+Here’s how to adjust your CMakeLists.txt:
+
+cmake
+# For the App target
+set_target_properties(App PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/bin/Debug
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release
+)
+
+# For the DLL target
+set_target_properties(SMathLib PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/bin/Debug
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release
+)

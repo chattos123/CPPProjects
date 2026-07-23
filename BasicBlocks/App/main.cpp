@@ -16,6 +16,9 @@
 #include "SQueue.h"
 #include "SQueueT.h"
 #include "SString.h"
+#include "SPair.h"
+#include "STuple.h"
+#include "STupleGet.h"
 
 // Testing app
 
@@ -30,6 +33,8 @@ void TestQueueT();
 void TestComplex();
 void TestString();
 void TestStringIteratyor();
+void TestSPair();
+void TestTuple();
 
 int main() {
 
@@ -76,6 +81,12 @@ int main() {
 
     // TestQueueT
     TestQueueT();
+
+    //TestPair
+    TestSPair();
+
+    //Test Tuple
+    TestTuple();
 
     //TestString
 
@@ -536,6 +547,39 @@ void TestStringIteratyor()
     }
 
     std::cout << "\nstring iter tests completed.\n";
+}
+
+void TestSPair()
+{
+    std::cout << "SPair iter tests start.\n";
+    SPair<std::string, int> p1("Alice", 25);
+    SPair<std::string, int> p2("Bob", 30);
+
+    std::cout << p1.first << " is " << p1.second << " years old.\n";
+    std::cout << p2.first << " is " << p2.second << " years old.\n";
+
+    auto p3 = make_spair("Charlie", 35);
+    std::cout << p3.first << " is " << p3.second << " years old.\n";
+
+    if (p1 < p2)
+    {
+        std::cout << p1.first << " comes before " << p2.first << "\n";
+    }
+
+    std::cout << "SPair iter tests End.\n";
+}
+
+void TestTuple()
+{
+    std::cout << "STuple iter tests start.\n";
+    STuple<std::string, int, double> t("Alice", 25, 72.5);
+
+    std::cout << get<0>(t) << " is "
+              << get<1>(t) << " years old, weight "
+              << get<2>(t) << " kg.\n";
+
+    STuple<> empty; // works too
+    std::cout << "STuple iter tests End.\n";
 }
 
 

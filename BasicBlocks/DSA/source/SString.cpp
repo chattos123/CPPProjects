@@ -10,6 +10,8 @@
 #include <cwchar>
 #include <algorithm>
 #include <stdexcept>
+#include <sstream>
+#include <vector>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -289,8 +291,6 @@ std::wstring SString::ToString() const {
 
 
 //subsstring
-#include <stdexcept>
-
 SString SString::substring(int start, int length) const 
 {
     if (start < 0 || start >= str_len) {
@@ -351,12 +351,120 @@ SString SString::revert() const
     return result;
 }
 
+std::vector<SString> SString::Tokenize(const wchar_t* delimiters) const 
+{
+    std::vector<SString> tokens;
+    std::wstring ws(Str);
+
+    size_t start = 0;
+    size_t pos = 0;
+
+    while ((pos = ws.find_first_of(delimiters, start)) != std::wstring::npos) {
+        if (pos > start) {
+            tokens.emplace_back(ws.substr(start, pos - start).c_str());
+        }
+        start = pos + 1;
+    }
+
+    if (start < ws.length()) {
+        tokens.emplace_back(ws.substr(start).c_str());
+    }
+
+    return tokens;
+}
+
+// Helper: convert narrow delimiters to wide string
+static std::wstring convertDelimiters(const char* delimiters)
+{
+#ifdef _WIN32
+    int len = MultiByteToWideChar(CP_UTF8, 0, delimiters, -1, nullptr, 0);
+    std::wstring ws(len, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, delimiters, -1, &ws[0], len);
+    return ws;
+#else
+    // Simplified for POSIX: assume ASCII
+    std::wstring ws;
+    while (*delimiters) {
+        ws.push_back(static_cast<wchar_t>(*delimiters));
+        ++delimiters;
+    }
+    return ws;
+#endif
+}
+
+std::vector<SString> SString::Tokenize(const char* delimiters) const 
+{
+    std::wstring wsDelims = convertDelimiters(delimiters);
+    std::vector<SString> tokens;
+    std::wstring ws(Str);
+
+    size_t start = 0;
+    size_t pos = 0;
+
+    while ((pos = ws.find_first_of(wsDelims, start)) != std::wstring::npos) {
+        if (pos > start) {
+            tokens.emplace_back(ws.substr(start, pos - start).c_str());
+        }
+        start = pos + 1;
+    }
+
+    if (start < ws.length()) {
+        tokens.emplace_back(ws.substr(start).c_str());
+    }
+
+    return tokens;
+}
+
+std::vector<SString> SString::Tokenize(const std::string delimiters) const 
+{
+    return Tokenize(delimiters.c_str());
+}
+
+std::vector<SString> SString::Tokenize(const SString delimiters) const 
+{
+    std::vector<SString> tokens;
+    std::wstring ws(Str);
+    std::wstring wsDelims(delimiters.c_str());
+
+    size_t start = 0;
+    size_t pos = 0;
+
+    while ((pos = ws.find_first_of(wsDelims, start)) != std::wstring::npos) {
+        if (pos > start) {
+            tokens.emplace_back(ws.substr(start, pos - start).c_str());
+        }
+        start = pos + 1;
+    }
+
+    if (start < ws.length()) {
+        tokens.emplace_back(ws.substr(start).c_str());
+    }
+
+    return tokens;
+}
+
+
 // ---------------- Comparison ----------------
 
 bool SString::match_string(const wchar_t* s) const 
 {
     return std::wcscmp(Str, s) == 0;
 }
+
+//statics
+
+bool SString::IsEmpty(const SString& s) {
+    return s.str_len == 0;
+}
+
+bool SString::IsNull(const SString& s) {
+    return s.Str == nullptr;
+}
+
+bool SString::IsNullOrEmpty(const SString& s) {
+    return (s.Str == nullptr) || (s.str_len == 0);
+}
+
 
 // ---------------- Concatenation ----------------
 
@@ -534,11 +642,20 @@ std::wostream& operator<<(std::wostream& os, const SString& s)
     return os;
 }
 
-std::wistream& operator>>(std::wistream& is, SString& s)
+/* std::wistream& operator>>(std::wistream& is, SString& s)
 {
     wchar_t temp[1024];
     is.getline(temp, 1024); // read a token (whitespace-delimited)
     s = temp;   // assign into SString (uses your operator=(const wchar_t*)
+    return is;
+} */
+
+// Input stream operator: read full line
+std::wistream& operator>>(std::wistream& is, SString& s) {
+    std::wstring temp;
+    std::getline(is, temp);   // read entire line including spaces
+
+    s = temp.c_str();         // assign into SString (uses operator=(const wchar_t*))
     return is;
 }
 

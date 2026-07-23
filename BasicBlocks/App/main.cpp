@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <fcntl.h>
+#include <io.h>
 #include "SMathLib.h"
 #include "SCalculator.h"
 #include "SComplex.h"
@@ -26,6 +29,7 @@ void TestQueue();
 void TestQueueT(); 
 void TestComplex();
 void TestString();
+void TestStringIteratyor();
 
 int main() {
 
@@ -74,6 +78,12 @@ int main() {
     TestQueueT();
 
     //TestString
+
+    // Force console to wide mode
+    _setmode(_fileno(stdin), _O_U16TEXT);
+    _setmode(_fileno(stdout), _O_U16TEXT);
+
+    TestStringIteratyor();
 
     TestString();
 
@@ -400,6 +410,16 @@ void TestVector()
     SString s1(L"Hello Wide");
     SString s2("Hello Narrow");
     SString s3 = SString::Empty();
+    bool bTest = SString::IsEmpty(s3);
+
+    if(bTest)
+    {
+        std::cout << "String is Empty";
+    }
+    else
+    {
+        std::cout << "String is  not Empty";   
+    }
 
     std::wcout << L"Constructed s1: " << s1 << std::endl;
     std::wcout << L"Constructed s2: " << s2 << std::endl;
@@ -466,6 +486,56 @@ void TestVector()
     std::cout << "c_charString() -> const char*: " << cstr << std::endl;
 
     std::wcout << L"--- End of Test ---" << std::endl;
+
+    // cin
+    SString sIN;
+    std::wcout << L"Enter a full line: ";
+
+    std::wstring temp;
+    std::getline(std::wcin, temp);
+    sIN = temp.c_str();
+
+    std::wcout << L"You entered (wide): " << sIN << std::endl;
+    std::cout << "You entered (UTF-8): " << sIN.c_charString() << std::endl;
+
+    // tokenize test
+    SString sToken(L"Hello, world! This is a tokenizer test.");
+
+    // Default delimiters: space, tab, newline
+    auto tokens = sToken.Tokenize();
+
+    std::wcout << L"Tokens:" << std::endl;
+    for (const auto& t : tokens) {
+        std::wcout << L"- " << t << std::endl;
+    }
+
+    // Custom delimiters: space and comma
+    auto tokens2 = sToken.Tokenize(L" ,");
+    std::wcout << L"\nTokens with custom delimiters:" << std::endl;
+    for (const auto& t : tokens2) {
+        std::wcout << L"- " << t << std::endl;
+    }
+}
+
+void TestStringIteratyor()
+{
+    std::cout << "string iter tests start.\n";
+
+    SString s(L"Programming is মজার when you solve problems quickly!");
+
+    // Range-based for loop works
+    for (wchar_t ch : s) {
+        std::wcout << ch << ' ';
+    }
+    std::wcout << std::endl;
+
+    // STL algorithm works
+    auto it = std::find(s.begin(), s.end(), L'W');
+    if (it != s.end()) {
+        std::wcout << L"Found character: " << *it << std::endl;
+    }
+
+    std::cout << "\nstring iter tests completed.\n";
 }
 
 

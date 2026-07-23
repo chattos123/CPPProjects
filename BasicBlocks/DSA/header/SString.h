@@ -28,6 +28,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 /**
  * @class SString
@@ -62,6 +63,8 @@ private:
      * @param max_len Maximum number of characters (including null terminator).
      */
     static void safe_concat(wchar_t* dest, const wchar_t* src, size_t max_len);
+
+
 
 public:
     /** @brief Default constructor: creates an empty string. */
@@ -167,7 +170,33 @@ public:
      */
     void Clear();
 
+    /**
+     * @brief Splits the string into tokens based on given delimiters.
+     * @param delimiters A wide-character string containing delimiter characters.
+     * @return A vector of SString tokens.
+     */
+    std::vector<SString> Tokenize(const wchar_t* delimiters = L" \t\n") const;
+    
+    /**
+     * @brief Splits the string into tokens based on narrow (char*) delimiters.
+     * @param delimiters Narrow string containing delimiter characters (UTF-8 or ASCII).
+     * @return A vector of SString tokens.
+     */
+    std::vector<SString> Tokenize(const char* delimiters) const;
 
+    /**
+     * @brief Splits the string into tokens based on delimiters provided as std::string.
+     * @param delimiters Narrow string containing delimiter characters (UTF-8 or ASCII).
+     * @return A vector of SString tokens.
+     */
+    std::vector<SString> Tokenize(const std::string delimiters) const;
+
+    /**
+     * @brief Splits the string into tokens based on delimiters provided as another SString.
+     * @param delimiters An SString containing delimiter characters.
+     * @return A vector of SString tokens.
+     */
+    std::vector<SString> Tokenize(const SString delimiters) const;
 
     /**
      * @brief Compares with another wide string.
@@ -175,6 +204,29 @@ public:
      * @return true if equal, false otherwise.
      */
     bool match_string(const wchar_t* s) const;
+
+    //static helper
+        /**
+     * @brief Checks if the given SString is empty (length == 0).
+     * @param s The SString to check.
+     * @return true if empty, false otherwise.
+     */
+    static bool IsEmpty(const SString& s);
+
+    /**
+     * @brief Checks if the given SString is null (internal buffer == nullptr).
+     * @param s The SString to check.
+     * @return true if null, false otherwise.
+     */
+    static bool IsNull(const SString& s);
+
+    /**
+     * @brief Checks if the given SString is either null or empty.
+     * @param s The SString to check.
+     * @return true if null or empty, false otherwise.
+     */
+    static bool IsNullOrEmpty(const SString& s);
+
 
     /** @brief Concatenates with another SString. */
     SString operator+(const SString& other) const;
@@ -217,12 +269,26 @@ public:
     /** @brief Output stream operator. */
     DSALIB_API friend std::wostream& operator<<(std::wostream& os, const SString& s);
 
-    /** @brief Input stream operator. */
+    /** @brief Input stream operator. */    
+    // Input stream operator (reads a full line)
     DSALIB_API friend std::wistream& operator>>(std::wistream& is, SString& s);
+
 
     /** @brief Creates an SString from a UTF-8 encoded string. */
     static SString FromUtf8(const char* utf8);
 
     /** @brief Converts the internal wide string to UTF-8. */
     std::string ToUtf8() const;
+
+    //iterators
+    using value_type = wchar_t;
+    using iterator = value_type*;
+    using const_iterator = const value_type*;
+
+    iterator begin() { return (Str ? Str : nullptr); }
+    const_iterator begin() const { return (Str ? Str : nullptr); }
+
+    iterator end() { return (Str ? Str + str_len : nullptr); }
+    const_iterator end() const { return (Str ? Str + str_len : nullptr); }
+
 };

@@ -73,7 +73,7 @@ The `SHashMap<K, V, Hash>` class is a type-safe, generic dictionary (associative
   2. Instantiate a temporary `SVectorT<SListT<SPair<K,V>>>` named `newBuckets` initialized with `newCapacity` empty lists [cite: 2].
   3. Iterate through all lists in `m_buckets` from index $0$ to `m_capacity - 1` [cite: 2].
   4. Traverse each node in every list, recalculating the destination bucket:
-     $$\text{newIndex} = \text{m\_hasher}(\text{node->m\_val.first}) \pmod{\text{newCapacity}}$$ [cite: 2]
+     $$\text{newIndex} = \text{m\_hasher}(\text{node}\rightarrow\text{m\_val.first}) \pmod{\text{newCapacity}}$$ [cite: 2]
   5. Add `node->m_val` into `newBuckets[newIndex]` [cite: 2].
   6. Transfer `newBuckets` ownership into `m_buckets` via `std::move` [cite: 2].
   7. Update `m_capacity` to `newCapacity` [cite: 2].
@@ -154,7 +154,7 @@ SHashMap(int capacity = 8, Hash h = Hash());
 ## 6. Known Constraints & Design Considerations
 
 1. **Load Factor Maintenance & Importance:** 
-   * **Definition:** Calculated as $\alpha = \frac{\text{m\_size}}{\text{m\_capacity}}$, measuring table fullness.
+   * **Definition:** Calculated as $\alpha = \frac{\text{m\_size}}{\text{m\_capacity}}$, measuring overall table fullness.
    * **Threshold:** Maintained at $\le 0.75$ [cite: 2].
    * **Performance Impact:** Keeping the load factor low limits collision chain lengths, ensuring operations (`insert`, `contains`, `at`, `erase`) run in $O(1)$ average time rather than degrading toward $O(N)$.
    * **Trade-off:** Serves as a balance between CPU execution speed (reducing collisions) and RAM usage (avoiding excessive empty bucket allocations).

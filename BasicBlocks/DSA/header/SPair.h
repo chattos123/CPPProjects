@@ -4,6 +4,9 @@
 ***********************************************************************/
 #pragma once
 
+#include <utility>   // for std::move
+
+
 #ifdef DSALIB_EXPORTS
 #define DSALIB_API __declspec(dllexport)
 #else

@@ -29,6 +29,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cwchar>   // for std::wcscmp
+#include <ostream>  // for std::ostream
 
 /**
  * @class SString
@@ -262,10 +264,7 @@ public:
      * @return Reference to this SString after concatenation.
      */
     SString& operator+=(const SString& other);
-
-
-
-
+   
     /** @brief Output stream operator. */
     DSALIB_API friend std::wostream& operator<<(std::wostream& os, const SString& s);
 
@@ -292,3 +291,25 @@ public:
     const_iterator end() const { return (Str ? Str + str_len : nullptr); }
 
 };
+
+ /**
+ * @brief Equality operator for SString.
+ * @param lhs Left-hand side SString.
+ * @param rhs Right-hand side SString.
+ * @return true if both strings have identical content, false otherwise.
+ */
+inline bool operator==(const SString& lhs, const SString& rhs)
+{
+    return std::wcscmp(lhs.c_str(), rhs.c_str()) == 0;
+}
+
+/**
+ * @brief Output stream operator for narrow streams.
+ * @param os Output stream (std::ostream).
+ * @param s SString to print.
+ * @return Reference to the output stream.
+ */
+inline std::ostream& operator<<(std::ostream& os, const SString& s) {
+    os << s.ToUtf8();  // convert wide string to UTF-8 std::string
+    return os;
+}

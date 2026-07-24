@@ -1,3 +1,5 @@
+#include <iostream>
+
 template <typename T>
 /***********************************************************************/
 /// <b>Function: SListT</b>

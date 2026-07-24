@@ -92,6 +92,7 @@ These classes implement `ITestRunner` and act as orchestrators for their respect
 #### `App/sDSATesters`
 - Contains concrete DSA component testers.
 - Each tester implements `RunAllTests()` and exercises a specific DSA component.
+- For detailed DSA suite orchestration, see [sDSATest Design Document](SDSATest_Design_Document.md).
 
 ---
 

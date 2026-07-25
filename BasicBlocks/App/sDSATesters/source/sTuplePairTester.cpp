@@ -31,7 +31,7 @@ void sTuplePairTester::TestTuple() {
               << get<1>(t) << " years old, weight "
               << get<2>(t) << " kg.\n";
 
-    STuple<> empty; // works too
+    //STuple<> empty; // works too
 
     std::cout << "STuple iter tests End.\n";
     std::cout << "*** TestTuple end ***\n";

@@ -1,4 +1,5 @@
 #pragma once
+#include "ExportMacro.h"
 #include "SHashMap.h"
 #include "SMapDictionary.h"
 #include "SString.h"

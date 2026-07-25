@@ -6,11 +6,7 @@
 ***********************************************************************/
 #pragma once
 
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
+#include "ExportMacro.h"
 
 #include "SPair.h"
 #include "SVectorT.h"
@@ -28,7 +24,7 @@
 *          for collision handling via separate chaining.
 ***********************************************************************/
 template <typename K, typename V, typename Hash = std::hash<K>>
-class DSALIB_API SHashMap {
+class SHashMap {
 private:
     SVectorT<SListT<SPair<K,V>>> m_buckets;  ///< Buckets array
     int m_size;                              ///< Number of elements

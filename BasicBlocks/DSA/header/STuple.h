@@ -1,29 +1,23 @@
-/***********************************************************************
-* File: STuple.h
-* Description: Declares the templated STuple class similar to std::tuple.
-***********************************************************************/
 #pragma once
 
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
-
+#include "ExportMacro.h"
 #include <utility>   // for std::forward
 #include <cstddef>   // for size_t
 
-/***********************************************************************
-* Class: STuple<Ts...>
-*
-* Purpose: A generic container holding an arbitrary number of values.
-***********************************************************************/
+// Forward declaration (NO DSALIB_API)
 template <typename... Ts>
-class DSALIB_API STuple;
+class STuple;
 
-// Recursive definition: head element + tail tuple
+// Base case: empty tuple (NO DSALIB_API)
+template <>
+class STuple<> {
+public:
+    STuple() = default;
+};
+
+// Recursive definition: head element + tail tuple (NO DSALIB_API)
 template <typename Head, typename... Tail>
-class DSALIB_API STuple<Head, Tail...> {
+class STuple<Head, Tail...> {
 public:
     Head head;
     STuple<Tail...> tail;
@@ -36,11 +30,4 @@ public:
     template <typename H, typename... T>
     STuple(H&& h, T&&... t)
         : head(std::forward<H>(h)), tail(std::forward<T>(t)...) {}
-};
-
-// Base case: empty tuple
-template <>
-class DSALIB_API STuple<> {
-public:
-    STuple() = default;
 };

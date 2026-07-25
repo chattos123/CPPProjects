@@ -23,7 +23,7 @@ SVector::SVector() : m_data(nullptr), m_size(0), m_capacity(0) {}
 ///
 /***********************************************************************/
 SVector::SVector(const SVector& other)
- {
+{
     m_size = other.m_size;
     m_capacity = other.m_capacity;
     m_data = new int[m_capacity];
@@ -32,6 +32,20 @@ SVector::SVector(const SVector& other)
     {
         m_data[i] = other.m_data[i];
     }
+}
+
+/***********************************************************************/
+/// <b>Function: SVector (Move Constructor)</b>
+///
+/// <b>brief</b>      Steals memory from temporary SVector object.
+///
+/***********************************************************************/
+SVector::SVector(SVector&& other) noexcept
+    : m_data(other.m_data), m_size(other.m_size), m_capacity(other.m_capacity) 
+{
+    other.m_data = nullptr;
+    other.m_size = 0;
+    other.m_capacity = 0;
 }
 
 /***********************************************************************/
@@ -86,7 +100,7 @@ void SVector::push_back(int value)
 ///
 /***********************************************************************/
 void SVector::pop_back()
- {
+{
     if (m_size == 0) {
         throw std::out_of_range("Vector is empty");
     }
@@ -97,16 +111,20 @@ void SVector::pop_back()
 /***********************************************************************/
 /// <b>Function: at</b>
 ///
-/// <b>brief</b>      Returns the value at the specified index with bounds checking.
+/// <b>brief</b>      Returns reference to element at index with bounds check.
 ///
 /***********************************************************************/
-int SVector::at(int index) const 
-{
-    if (index < 0 || index >= m_size) 
-    {
-        throw std::out_of_range("Index out of range");
+const int& SVector::at(int index) const {
+    if (index < 0 || index >= m_size) {
+        throw std::out_of_range("Index out of bounds");
     }
+    return m_data[index];
+}
 
+int& SVector::at(int index) {
+    if (index < 0 || index >= m_size) {
+        throw std::out_of_range("Index out of bounds");
+    }
     return m_data[index];
 }
 
@@ -157,7 +175,7 @@ const int& SVector::operator[](int index) const
 }
 
 /***********************************************************************/
-/// <b>Function: operator=</b>
+/// <b>Function: operator= (Copy Assignment)</b>
 ///
 /// <b>brief</b>      Performs deep copy assignment from another vector.
 ///
@@ -167,7 +185,6 @@ SVector& SVector::operator=(const SVector& other)
     if (this == &other) return *this; // self-assignment check
 
     delete[] m_data; // free old memory
-    m_data = nullptr; // avoid dangling pointer
 
     m_size = other.m_size;
     m_capacity = other.m_capacity;
@@ -177,6 +194,28 @@ SVector& SVector::operator=(const SVector& other)
         m_data[i] = other.m_data[i];
     }
 
+    return *this;
+}
+
+/***********************************************************************/
+/// <b>Function: operator= (Move Assignment)</b>
+///
+/// <b>brief</b>      Transfers ownership of memory from temporary vector.
+///
+/***********************************************************************/
+SVector& SVector::operator=(SVector&& other) noexcept 
+{
+    if (this != &other) {
+        delete[] m_data; // free existing memory
+
+        m_data = other.m_data;
+        m_size = other.m_size;
+        m_capacity = other.m_capacity;
+
+        other.m_data = nullptr;
+        other.m_size = 0;
+        other.m_capacity = 0;
+    }
     return *this;
 }
 
@@ -201,4 +240,3 @@ SVector SVector::operator+(const SVector& other) const {
 
     return result;
 }
-

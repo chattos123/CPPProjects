@@ -4,12 +4,7 @@
 *              fixed-size non-circular queue implementation.
 ***********************************************************************/
 #pragma once
-
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
+#include "ExportMacro.h"
 
 #define QUEUE_MAX 255
 
@@ -20,7 +15,7 @@
 *          with enqueue, dequeue, and query operations.
 ***********************************************************************/
 template <typename T>
-class DSALIB_API SQueueT {
+class SQueueT {
 private:
     T data[QUEUE_MAX];
     int frontIndex;

@@ -1,0 +1,82 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake Configure (Debug, UCRT64 + Ninja)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-G", "Ninja",
+        "-B", "build-debug",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe",
+        "-DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "CMake Build (Debug, Ninja)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build", "build-debug"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "dependsOn": "CMake Configure (Debug, UCRT64 + Ninja)",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "CMake Configure (Release, UCRT64 + Ninja)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-G", "Ninja",
+        "-B", "build-release",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe",
+        "-DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "CMake Build (Release, Ninja)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build", "build-release"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOn": "CMake Configure (Release, UCRT64 + Ninja)",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "CMake Clean (PS1)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/clean.ps1",
+        "-Config", "All"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}

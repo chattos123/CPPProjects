@@ -2,71 +2,32 @@
  * @file SString.h
  * @brief Declaration of the immutable SString class for wide-character string handling.
  *
- * The SString class provides an immutable string type similar to Java's String or MFC's CString.
- * Internally it stores data as wide characters (wchar_t) for Unicode support.
- * All operations return new SString objects, ensuring immutability.
- *
- * Features:
- * - Construction from wide strings or UTF-8 strings
- * - Case conversion (upper, lower, toggle case)
- * - String reversal
- * - Concatenation
- * - UTF-8 <-> UTF-16 conversion utilities
- * - Stream input/output operators
- *
  * @author Soumyajit
  * @date 2026-07-22
  */
 
 #pragma once
 
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
+#include "ExportMacro.h"
 
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cwchar>   // for std::wcscmp
-#include <ostream>  // for std::ostream
+#include <cwchar>    // for std::wcscmp
+#include <ostream>   // for std::ostream
 
 /**
  * @class SString
  * @brief Immutable wide-character string class.
- *
- * Provides safe, immutable string operations on wchar_t buffers.
- * All modifying operations return new SString instances.
  */
-class DSALIB_API SString {
+class DSA_API SString {
 private:
-    wchar_t* Str;   ///< Internal wide-character buffer
-    int str_len;    ///< Length of the string (excluding null terminator)
+    wchar_t* Str;    ///< Internal wide-character buffer
+    int str_len;     ///< Length of the string (excluding null terminator)
 
-    /**
-     * @brief Allocates memory and copies the given wide string safely.
-     * @param s Input wide string to copy.
-     */
     void allocate_and_copy(const wchar_t* s);
-
-    /**
-     * @brief Safely copies a wide string into a destination buffer.
-     * @param dest Destination buffer.
-     * @param src Source wide string.
-     * @param max_len Maximum number of characters (including null terminator).
-     */
     static void safe_copy(wchar_t* dest, const wchar_t* src, size_t max_len);
-
-    /**
-     * @brief Safely concatenates a wide string onto a destination buffer.
-     * @param dest Destination buffer (must be large enough).
-     * @param src Source wide string.
-     * @param max_len Maximum number of characters (including null terminator).
-     */
     static void safe_concat(wchar_t* dest, const wchar_t* src, size_t max_len);
-
-
 
 public:
     /** @brief Default constructor: creates an empty string. */
@@ -75,15 +36,14 @@ public:
     /** @brief Constructs from a wide-character string. */
     explicit SString(const wchar_t* s);
 
-    /** 
-     * @brief Constructs from a narrow (char*) string by converting to wide characters.
-     * @param s Narrow string (UTF-8 or ASCII).
-     */
+    /** @brief Constructs from a narrow (char*) string by converting to wide characters. */
     explicit SString(const char* s);
-
 
     /** @brief Copy constructor. */
     SString(const SString& other);
+
+    /** @brief Destructor: releases allocated memory. */
+    ~SString();
 
     /** @brief Assignment operator from another SString. */
     SString& operator=(const SString& other);
@@ -91,34 +51,14 @@ public:
     /** @brief Assignment operator from a wide-character string. */
     SString& operator=(const wchar_t* s);
 
-    /**
-     * @brief Assignment operator from a narrow (char*) string.
-     * Internally converts to wide characters before storing.
-     * @param strSource Narrow string (UTF-8 or ASCII).
-     * @return Reference to this SString after assignment.
-     */
+    /** @brief Assignment operator from a narrow (char*) string. */
     SString& operator=(const char* strSource);
 
-    /**
-     * @brief Provides read-only access to a character at the given index.
-     * @param index Position of the character (0-based).
-     * @return Const reference to the wchar_t at the given index.
-     * @throws std::out_of_range if index is invalid.
-     */
+    /** @brief Subscript operator (read-only). */
     const wchar_t& operator[](int index) const;
 
-    /**
-     * @brief Provides writable access to a character at the given index.
-     * @param index Position of the character (0-based).
-     * @return Reference to the wchar_t at the given index.
-     * @throws std::out_of_range if index is invalid.
-     */
+    /** @brief Subscript operator (writable). */
     wchar_t& operator[](int index);
-
-
-
-    /** @brief Destructor: releases allocated memory. */
-    ~SString();
 
     /** @brief Returns the length of the string. */
     int length() const;
@@ -126,15 +66,8 @@ public:
     /** @brief Returns the internal wide-character buffer. */
     const wchar_t* c_str() const;
 
-        /**
-     * @brief Converts the internal wide-character string to a narrow UTF-8 C-style string.
-     * @return Pointer to a UTF-8 encoded char buffer (null-terminated).
-     *
-     * @note The returned pointer is valid until the next call to c_charString().
-     *       Internally managed buffer; do not free it manually.
-     */
+    /** @brief Converts the internal wide string to a narrow UTF-8 C-style string. */
     const char* c_charString() const;
-
 
     /** @brief Returns an empty SString instance. */
     static SString Empty();
@@ -151,204 +84,88 @@ public:
     /** @brief Returns a new string with characters reversed. */
     SString revert() const;
 
-        /**
-     * @brief Returns a substring of this SString.
-     * @param start Starting index (0-based).
-     * @param length Number of characters to extract.
-     * @return New SString containing the requested substring.
-     * @throws std::out_of_range if start or length are invalid.
-     */
+    /** @brief Returns a substring of this SString. */
     SString substring(int start, int length) const;
 
-    /**
-     * @brief Converts the internal wide-character buffer to a std::wstring.
-     * @return A std::wstring containing the same characters.
-     */
+    /** @brief Converts the internal wide-character buffer to a std::wstring. */
     std::wstring ToString() const;
 
-
-    /**
-     * @brief Clears the contents of the string, resetting it to empty.
-     */
+    /** @brief Clears the contents of the string, resetting it to empty. */
     void Clear();
 
-    /**
-     * @brief Splits the string into tokens based on given delimiters.
-     * @param delimiters A wide-character string containing delimiter characters.
-     * @return A vector of SString tokens.
-     */
+    // ---------------- Tokenize Overloads ----------------
     std::vector<SString> Tokenize(const wchar_t* delimiters = L" \t\n") const;
-    
-    /**
-     * @brief Splits the string into tokens based on narrow (char*) delimiters.
-     * @param delimiters Narrow string containing delimiter characters (UTF-8 or ASCII).
-     * @return A vector of SString tokens.
-     */
     std::vector<SString> Tokenize(const char* delimiters) const;
+    std::vector<SString> Tokenize(const std::string& delimiters) const;
+    std::vector<SString> Tokenize(const SString& delimiters) const;
 
-    /**
-     * @brief Splits the string into tokens based on delimiters provided as std::string.
-     * @param delimiters Narrow string containing delimiter characters (UTF-8 or ASCII).
-     * @return A vector of SString tokens.
-     */
-    std::vector<SString> Tokenize(const std::string delimiters) const;
-
-    /**
-     * @brief Splits the string into tokens based on delimiters provided as another SString.
-     * @param delimiters An SString containing delimiter characters.
-     * @return A vector of SString tokens.
-     */
-    std::vector<SString> Tokenize(const SString delimiters) const;
-
-    /**
-     * @brief Compares with another wide string.
-     * @param s Wide string to compare.
-     * @return true if equal, false otherwise.
-     */
+    /** @brief Compares with another wide string. */
     bool match_string(const wchar_t* s) const;
 
-    //static helper
-        /**
-     * @brief Checks if the given SString is empty (length == 0).
-     * @param s The SString to check.
-     * @return true if empty, false otherwise.
-     */
+    // ---------------- Static Helpers ----------------
     static bool IsEmpty(const SString& s);
-
-    /**
-     * @brief Checks if the given SString is null (internal buffer == nullptr).
-     * @param s The SString to check.
-     * @return true if null, false otherwise.
-     */
     static bool IsNull(const SString& s);
-
-    /**
-     * @brief Checks if the given SString is either null or empty.
-     * @param s The SString to check.
-     * @return true if null or empty, false otherwise.
-     */
     static bool IsNullOrEmpty(const SString& s);
 
-
-    /** @brief Concatenates with another SString. */
+    // ---------------- Concatenation Operators ----------------
     SString operator+(const SString& other) const;
-
-    /** @brief Concatenates with a wide-character string. */
     SString operator+(const wchar_t* s) const;
-
-        /** 
-     * @brief Concatenates with a narrow (char*) string.
-     * @param strSource Narrow string (UTF-8 or ASCII).
-     * @return New SString containing the concatenation.
-     */
     SString operator+(const char* strSource) const;
 
-        /** 
-     * @brief Appends a wide-character string to this SString.
-     * @param strSource Wide string to append.
-     * @return Reference to this SString after concatenation.
-     */
     SString& operator+=(const wchar_t* strSource);
-
-    /** 
-     * @brief Appends a narrow (char*) string to this SString.
-     * Internally converts to wide characters before appending.
-     * @param strSource Narrow string (UTF-8 or ASCII).
-     * @return Reference to this SString after concatenation.
-     */
     SString& operator+=(const char* strSource);
-
-    /** 
-     * @brief Appends another SString to this instance.
-     * @param other The SString to append.
-     * @return Reference to this SString after concatenation.
-     */
     SString& operator+=(const SString& other);
 
-    // ---------------- Type Conversion Operators ----------------
+       /** @brief Conversion operator to wide C-style string (const wchar_t*). Marked explicit to allow static_cast<std::wstring> */
+    explicit operator const wchar_t*() const { return c_str(); }
 
-    /**
-     * @brief Conversion operator to a wide C-style string (const wchar_t*).
-     * Allows SString to be passed directly into APIs expecting const wchar_t*.
-     */
-    operator const wchar_t*() const { return c_str(); }
+    /** @brief Explicit conversion operator to narrow C-style string (const char*). */
+    explicit operator const char*() const { return c_charString(); }
 
-    /**
-     * @brief Conversion operator to a narrow UTF-8 C-style string (const char*).
-     * Allows SString to be passed directly into APIs expecting const char*.
-     */
-    operator const char*() const { return c_charString(); }
-
-    /**
-     * @brief Explicit conversion operator to std::wstring.
-     */
+    /** @brief Explicit conversion operator to std::wstring. */
     explicit operator std::wstring() const { return ToString(); }
 
-    /**
-     * @brief Explicit conversion operator to UTF-8 encoded std::string.
-     */
+    /** @brief Explicit conversion operator to UTF-8 std::string. */
     explicit operator std::string() const { return ToUtf8(); }
 
-    /**
-     * @brief Explicit conversion operator to int.
-     * Converts the string representation to an integer value.
-     * @return int Parsed integer value.
-     * @throws std::invalid_argument or std::out_of_range if string is not a valid integer.
-     */
+    /** @brief Explicit conversion operator to int. */
     explicit operator int() const;
 
-    /**
-     * @brief Explicit conversion operator to double.
-     * @return double Parsed floating-point value.
-     * @throws std::invalid_argument or std::out_of_range if string is invalid.
-     */
+    /** @brief Explicit conversion operator to double. */
     explicit operator double() const;
-   
-    /** @brief Output stream operator. */
-    DSALIB_API friend std::wostream& operator<<(std::wostream& os, const SString& s);
 
-    /** @brief Input stream operator. */    
-    // Input stream operator (reads a full line)
-    DSALIB_API friend std::wistream& operator>>(std::wistream& is, SString& s);
-
+    /** @brief Stream Operators */
+    friend DSA_API std::wostream& operator<<(std::wostream& os, const SString& s);
+    friend DSA_API std::wistream& operator>>(std::wistream& is, SString& s);
 
     /** @brief Creates an SString from a UTF-8 encoded string. */
     static SString FromUtf8(const char* utf8);
 
-    /** @brief Converts the internal wide string to UTF-8. */
+    /** @brief Converts the internal wide string to UTF-8 std::string. */
     std::string ToUtf8() const;
 
-    //iterators
+    // ---------------- STL Iterators ----------------
     using value_type = wchar_t;
     using iterator = value_type*;
     using const_iterator = const value_type*;
 
-    iterator begin() { return (Str ? Str : nullptr); }
-    const_iterator begin() const { return (Str ? Str : nullptr); }
+    iterator begin() { return Str; }
+    const_iterator begin() const { return Str; }
 
     iterator end() { return (Str ? Str + str_len : nullptr); }
     const_iterator end() const { return (Str ? Str + str_len : nullptr); }
-
 };
 
- /**
- * @brief Equality operator for SString.
- * @param lhs Left-hand side SString.
- * @param rhs Right-hand side SString.
- * @return true if both strings have identical content, false otherwise.
- */
-inline bool operator==(const SString& lhs, const SString& rhs)
-{
+// ---------------- Inline Non-Member Operators ----------------
+
+inline bool operator==(const SString& lhs, const SString& rhs) {
+    if (lhs.c_str() == nullptr || rhs.c_str() == nullptr) {
+        return lhs.c_str() == rhs.c_str();
+    }
     return std::wcscmp(lhs.c_str(), rhs.c_str()) == 0;
 }
 
-/**
- * @brief Output stream operator for narrow streams.
- * @param os Output stream (std::ostream).
- * @param s SString to print.
- * @return Reference to the output stream.
- */
 inline std::ostream& operator<<(std::ostream& os, const SString& s) {
-    os << s.ToUtf8();  // convert wide string to UTF-8 std::string
+    os << s.ToUtf8();
     return os;
 }

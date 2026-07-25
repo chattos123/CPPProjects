@@ -11,5 +11,11 @@ target_include_directories(DSALib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/source
 )
 
-# Export macro for Windows DLLs
-target_compile_definitions(DSALib PRIVATE DSALIB_EXPORTS)
+# Crucial: Define BUILDING_DSA_DLL to trigger __declspec(dllexport) in ExportMacro.h
+target_compile_definitions(DSALib PRIVATE BUILDING_DSA_DLL)
+
+# GCC / Clang symbol visibility configuration (matches MSVC dll import/export rules)
+set_target_properties(DSALib PROPERTIES
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
+)

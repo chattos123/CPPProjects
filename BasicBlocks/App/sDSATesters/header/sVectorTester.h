@@ -1,4 +1,5 @@
 #pragma once
+#include "ExportMacro.h"
 #include "ITestRunner.h"
 #include "SVector.h"
 #include "SVectorT.h"

@@ -1,4 +1,5 @@
 #pragma once
+#include "ExportMacro.h"
 #include "STuple.h"
 
 // Recursive getter

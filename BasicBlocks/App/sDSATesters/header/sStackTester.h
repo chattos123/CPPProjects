@@ -1,4 +1,5 @@
 #pragma once
+#include "ExportMacro.h"
 #include "ITestRunner.h"
 #include "SStack.h"
 #include "SStackT.h"

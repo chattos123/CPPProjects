@@ -1,8 +1,14 @@
 #include "sStringTester.h"
 #include <cstring>
-#include <fcntl.h>
-#include <io.h>
 #include <cassert>
+#include <cmath>       // for std::abs
+#include <algorithm>   // for std::find
+
+#if defined(_WIN32) || defined(__CYGWIN__)
+    #include <fcntl.h>
+    #include <io.h>
+    #include <windows.h>
+#endif
 
 void sStringTester::TestConstruction() 
 {
@@ -126,8 +132,10 @@ void sStringTester::TestConversions()
 void sStringTester::TestInput() 
 {
     std::wcout << L"\n*** Input Test start ***\n";
+#if defined(_WIN32)
     _setmode(_fileno(stdin), _O_U16TEXT);
     _setmode(_fileno(stdout), _O_U16TEXT);
+#endif
 
     SString sIN;
     std::wcout << L"Enter a full line: ";
@@ -138,8 +146,10 @@ void sStringTester::TestInput()
     std::cout << "You entered (UTF-8): " << sIN.c_charString() << std::endl;
 
     std::wcout << L"*** Input Test end ***\n\n";
+#if defined(_WIN32)
     _setmode(_fileno(stdin), _O_TEXT);
     _setmode(_fileno(stdout), _O_TEXT);
+#endif
 }
 
 void sStringTester::TestTokenize()
@@ -176,30 +186,29 @@ void sStringTester::TestCastOpearator()
     // 1. Test Wide C-String Casting (const wchar_t*)
     {
         SString s(L"Hello Wide World");
-        const wchar_t* rawWide = s; // Implicit conversion
+        const wchar_t* rawWide = static_cast<const wchar_t*>(s); // Explicit cast works!
         assert(rawWide != nullptr);
         assert(std::wcscmp(rawWide, L"Hello Wide World") == 0);
     }
 
     // 2. Test Narrow UTF-8 C-String Casting (const char*)
     {
-        SString s(L"Hello Narrow World");
-        const char* rawNarrow = s; // Implicit conversion
+        SString s("Hello Narrow World"); // Pass narrow string to constructor
+        const char* rawNarrow = static_cast<const char*>(s);
         assert(rawNarrow != nullptr);
         assert(std::strcmp(rawNarrow, "Hello Narrow World") == 0);
     }
-
     // 3. Test std::wstring Casting
     {
         SString s(L"Testing wstring");
-        std::wstring ws = static_cast<std::wstring>(s); // Explicit conversion
+        std::wstring ws = static_cast<std::wstring>(s); // Invokes operator std::wstring() cleanly!
         assert(ws == L"Testing wstring");
     }
 
     // 4. Test std::string (UTF-8) Casting
     {
         SString s(L"Testing string");
-        std::string str = static_cast<std::string>(s); // Explicit conversion
+        std::string str = static_cast<std::string>(s); // Invokes operator std::string() cleanly!
         assert(str == "Testing string");
     }
 
@@ -250,21 +259,26 @@ void sStringTester::TestCastOpearator()
     }
 
     std::cout << "[SUCCESS] TestCastOperator() passed all assertions!\n";
-
 }
 
 void sStringTester::TestUnicodeText() 
 {
-    _setmode(_fileno(stdin), _O_U16TEXT);
-    _setmode(_fileno(stdout), _O_U16TEXT);
+#if defined(_WIN32)
+    // 1. Set Windows Console Code Page to UTF-8
+    UINT oldOutputCP = GetConsoleOutputCP();
+    UINT oldCP = GetConsoleCP();
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+#endif
+
     std::wcout << L"\n*** UnicodeText Test start ***\n";
 
     // Example with Bengali + Emoji
     SString s1(L"বাংলা লেখা 😊");
     std::wcout << L"Original Unicode string: " << s1 << std::endl;
 
-    // Append more Unicode
-    s1 += L" —追加テキスト"; // Japanese
+    // Append more Unicode (Japanese)
+    s1 += L" —追加テキスト";
     std::wcout << L"After append: " << s1 << std::endl;
 
     // Tokenize Unicode text
@@ -277,7 +291,7 @@ void sStringTester::TestUnicodeText()
     // Iterate over characters
     std::wcout << L"Iterating characters:" << std::endl;
     for (wchar_t ch : s1) {
-        std::wcout << ch << ' ';
+        std::wcout << ch << L' ';
     }
     std::wcout << std::endl;
 
@@ -285,14 +299,20 @@ void sStringTester::TestUnicodeText()
     std::wstring ws = s1.ToString();
     std::wcout << L"ToString() -> std::wstring: " << ws << std::endl;
 
+    // Flush wide stream before writing to narrow stream
+    std::fflush(stdout);
+
     std::string utf8 = s1.ToUtf8();
     std::cout << "ToUtf8() -> std::string: " << utf8 << std::endl;
 
     std::wcout << L"*** UnicodeText Test end ***\n\n";
-    _setmode(_fileno(stdin), _O_TEXT);
-    _setmode(_fileno(stdout), _O_TEXT);
-}
 
+#if defined(_WIN32)
+    // Restore original console code pages
+    SetConsoleOutputCP(oldOutputCP);
+    SetConsoleCP(oldCP);
+#endif
+}
 
 void sStringTester::RunAllTests() 
 {
@@ -319,5 +339,4 @@ void sStringTester::RunAllTests()
     std::cout << "\n==============================\n";
     std::cout << "all SString tests Passed...\n";
     std::cout << "==============================\n";
-
 }

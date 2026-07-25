@@ -8,6 +8,7 @@
 
 #include "SString.h"
 #include <cwchar>
+#include <cstring>
 #include <algorithm>
 #include <stdexcept>
 #include <sstream>
@@ -15,6 +16,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <cwctype>
 #else
 #include <iconv.h>
 #include <cstring>
@@ -33,7 +35,7 @@ void SString::allocate_and_copy(const wchar_t* strSource)
 {
     if (strSource)
     {
-        str_len = std::wcslen(strSource);
+        str_len = static_cast<int>(wcslen(strSource));//std::wcslen(strSource);
         Str = new wchar_t[str_len + 1];
         safe_copy(Str, strSource, str_len + 1);
     }
@@ -144,7 +146,7 @@ SString::SString(const char* strSource)
     int len = MultiByteToWideChar(CP_UTF8, 0, strSource, -1, nullptr, 0);
     std::wstring ws(len, L'\0');
     MultiByteToWideChar(CP_UTF8, 0, strSource, -1, &ws[0], len);
-    str_len = ws.length();
+    str_len = static_cast<int>(ws.length()); // or wstr//str_len = static_cast<int>(wcslen(ws));//ws.length();
     Str = new wchar_t[str_len + 1];
     safe_copy(Str, ws.c_str(), str_len + 1);
 #else
@@ -325,7 +327,7 @@ const char* SString::c_charString() const {
         buffer = new char[bufferSize];
     }
 
-    WideCharToMultiByte(CP_UTF8, 0, Str, -1, buffer, bufferSize, nullptr, nullptr);
+    WideCharToMultiByte(CP_UTF8, 0, Str, -1, buffer, static_cast<int>(bufferSize), nullptr, nullptr);
     return buffer;
 #else
     // POSIX: use iconv
@@ -566,7 +568,7 @@ std::vector<SString> SString::Tokenize(const char* delimiters) const
  * @param[in] delimiters `std::string` containing delimiter characters.
  * @return std::vector<SString> A list of extracted tokens.
  */
-std::vector<SString> SString::Tokenize(const std::string delimiters) const 
+std::vector<SString> SString::Tokenize(const std::string& delimiters) const 
 {
     return Tokenize(delimiters.c_str());
 }
@@ -577,7 +579,7 @@ std::vector<SString> SString::Tokenize(const std::string delimiters) const
  * @param[in] delimiters `SString` object containing delimiter characters.
  * @return std::vector<SString> A list of extracted tokens.
  */
-std::vector<SString> SString::Tokenize(const SString delimiters) const 
+std::vector<SString> SString::Tokenize(const SString& delimiters) const 
 {
     std::vector<SString> tokens;
     std::wstring ws(Str);
@@ -675,7 +677,7 @@ SString SString::operator+(const SString& other) const
  */
 SString SString::operator+(const wchar_t* s) const
 {
-    int new_len = str_len + std::wcslen(s);
+    int new_len = str_len + static_cast<int>(wcslen(s));//std::wcslen(s);
     wchar_t* buffer = new wchar_t[new_len + 1];
     safe_copy(buffer, Str, new_len + 1);
     safe_concat(buffer, s, new_len + 1);
@@ -750,7 +752,7 @@ SString& SString::operator+=(const wchar_t* strSource)
 {
     if (!strSource) return *this;
 
-    int new_len = str_len + std::wcslen(strSource);
+    int new_len = str_len + static_cast<int>(wcslen(strSource));//std::wcslen(strSource);
     wchar_t* buffer = new wchar_t[new_len + 1];
     safe_copy(buffer, Str, new_len + 1);
     safe_concat(buffer, strSource, new_len + 1);
@@ -909,12 +911,19 @@ std::wistream& operator>>(std::wistream& is, SString& s) {
  *
  * @remarks Utilizes Windows API (`MultiByteToWideChar`) or POSIX `iconv`.
  */
-SString SString::FromUtf8(const char* utf8) {
+SString SString::FromUtf8(const char* utf8)
+{
+    if (!utf8 || *utf8 == '\0') 
+    {
+        return SString::Empty();
+    }
+
 #ifdef _WIN32
-    int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, nullptr, 0);
-    std::wstring ws(len, L'\0');
-    MultiByteToWideChar(CP_UTF8, 0, utf8, -1, &ws[0], len);
-    return SString(ws.c_str());
+    int len = static_cast<int>(std::strlen(utf8));
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, utf8, len, NULL, 0);
+    std::wstring wstrTo(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, 0, utf8, len, &wstrTo[0], size_needed);
+    return SString(wstrTo.c_str());
 #else
     iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
     if (cd == (iconv_t)-1) return SString(L"");
@@ -940,12 +949,20 @@ SString SString::FromUtf8(const char* utf8) {
  *
  * @remarks Useful for exporting system-native wide strings to network or file pipelines requiring UTF-8 encoding.
  */
-std::string SString::ToUtf8() const {
+std::string SString::ToUtf8() const 
+{
+    if (!Str || str_len == 0) return "";
+
 #ifdef _WIN32
-    int len = WideCharToMultiByte(CP_UTF8, 0, Str, -1, nullptr, 0, nullptr, nullptr);
-    std::string s(len, '\0');
-    WideCharToMultiByte(CP_UTF8, 0, Str, -1, &s[0], len, nullptr, nullptr);
-    return s;
+   	// Calculate required buffer size in bytes
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, Str, str_len, NULL, 0, NULL, NULL);
+    if (size_needed <= 0) {
+        return std::string("");
+    }
+
+    std::string strTo(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, 0, Str, str_len, &strTo[0], size_needed, NULL, NULL);
+    return strTo;
 #else
     iconv_t cd = iconv_open("UTF-8", "WCHAR_T");
     if (cd == (iconv_t)-1) return "";

@@ -3,12 +3,7 @@
 * Description: Declares the generic SStackT template class for a type-safe stack in the DSA library.
 ***********************************************************************/
 #pragma once
-
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
+#include "ExportMacro.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -21,7 +16,7 @@
 ***********************************************************************/
 
 template <typename T>
-class DSALIB_API SStackT 
+class SStackT 
 {
     private:
     T data[255];

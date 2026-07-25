@@ -3,12 +3,7 @@
 * Description: Declares the generic SListT template class for a type-safe singly-linked list in the DSA library.
 ***********************************************************************/
 #pragma once
-
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
+#include "ExportMacro.h"
 
 template <typename T>
 struct tagNodeT {
@@ -29,7 +24,7 @@ template <typename T>
 * Purpose: Provides a templated singly-linked list implementation that
 *          supports generic element insertion, removal, and traversal.
 ***********************************************************************/
-class DSALIB_API SListT {
+class SListT {
 private:
     psNodeT<T> m_head;
     int m_count;

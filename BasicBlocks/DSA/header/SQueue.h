@@ -1,14 +1,9 @@
 #pragma once
-
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
+#include "ExportMacro.h"
 
 #define QUEUE_MAX 255
 
-class DSALIB_API SQueue {
+class DSA_API SQueue {
 private:
     int data[QUEUE_MAX];
     int frontIndex;

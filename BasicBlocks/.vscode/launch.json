@@ -1,57 +1,110 @@
 {
-  "version": "0.2.0",
-  "configurations": [
+  "version": "2.0.0",
+  "tasks": [
     {
-      "name": "Debug App (UCRT64 + GDB)",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/build-debug/bin/Debug/App.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "miDebuggerPath": "C:/msys64N/ucrt64/bin/gdb.exe",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
-        {
-          "description": "Set Disassembly Flavor to Intel",
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
-        }
+      "label": "CMake Configure (Debug, UCRT64 + Ninja)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-G", "Ninja",
+        "-B", "build-debug",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe",
+        "-DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe"
       ],
-      "preLaunchTask": "CMake Build (Debug, Ninja)"
+      "group": { "kind": "build", "isDefault": false },
+      "problemMatcher": "$gcc"
     },
     {
-      "name": "Release App (UCRT64 + GDB)",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/build-release/bin/Release/App.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "miDebuggerPath": "C:/msys64N/ucrt64/bin/gdb.exe",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
-        {
-          "description": "Set Disassembly Flavor to Intel",
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
-        }
+      "label": "CMake Build (Debug, Ninja)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [ "--build", "build-debug" ],
+      "group": { "kind": "build", "isDefault": true },
+      "dependsOn": "CMake Configure (Debug, UCRT64 + Ninja)",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "CMake Configure (Release, UCRT64 + Ninja)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-G", "Ninja",
+        "-B", "build-release",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe",
+        "-DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe"
       ],
-      "preLaunchTask": "CMake Build (Release, Ninja)"
+      "group": { "kind": "build", "isDefault": false },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "CMake Build (Release, Ninja)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [ "--build", "build-release" ],
+      "group": { "kind": "build", "isDefault": false },
+      "dependsOn": "CMake Configure (Release, UCRT64 + Ninja)",
+      "problemMatcher": "$gcc"
+    },
+
+    {
+      "label": "CMake Clean (PS1)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/clean.ps1",
+        "-Config", "All"
+      ],
+      "group": { "kind": "build", "isDefault": false },
+      "problemMatcher": []
+    },
+
+    // 🆕 MSVC build tasks
+    {
+      "label": "CMake Configure (Debug, MSVC)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-G", "Visual Studio 17 2022",
+        "-A", "x64",
+        "-B", "build-msvc-debug",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "group": { "kind": "build", "isDefault": false },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "CMake Build (Debug, MSVC)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [ "--build", "build-msvc-debug", "--config", "Debug" ],
+      "group": { "kind": "build", "isDefault": false },
+      "dependsOn": "CMake Configure (Debug, MSVC)",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "CMake Configure (Release, MSVC)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-G", "Visual Studio 17 2022",
+        "-A", "x64",
+        "-B", "build-msvc-release",
+        "-DCMAKE_BUILD_TYPE=Release"
+      ],
+      "group": { "kind": "build", "isDefault": false },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "CMake Build (Release, MSVC)",
+      "type": "shell",
+      "command": "cmake",
+      "args": [ "--build", "build-msvc-release", "--config", "Release" ],
+      "group": { "kind": "build", "isDefault": false },
+      "dependsOn": "CMake Configure (Release, MSVC)",
+      "problemMatcher": "$msCompile"
     }
   ]
 }

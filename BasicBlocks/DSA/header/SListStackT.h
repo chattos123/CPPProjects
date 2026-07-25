@@ -4,13 +4,7 @@
 *              type-safe stack built on top of SListT.
 ***********************************************************************/
 #pragma once
-
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
-
+#include "ExportMacro.h"
 #include "SListT.h"
 #include <stdexcept>
 #include <iostream>
@@ -23,7 +17,7 @@
 *          query operations with type safety.
 ***********************************************************************/
 template <typename T>
-class DSALIB_API SListStackT {
+class SListStackT {
 private:
     SListT<T> m_list;
 

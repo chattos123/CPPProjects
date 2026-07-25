@@ -1,10 +1,11 @@
+#include "ExportMacro.h"
 #include "SPair.h"
 #include <vector>
 #include <list>
 #include <functional> // std::hash
 
 template <typename K, typename V>
-class DSALIB_API SMapDictionary {
+class SMapDictionary {
 private:
     std::vector<std::list<SPair<K,V>>> m_buckets;
     int m_size;

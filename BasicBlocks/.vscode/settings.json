@@ -1,5 +1,21 @@
 {
+    // 🧩 Use variant-based build folders (Debug/Release)
     "cmake.buildDirectory": "${workspaceFolder}/build-${variant:buildType}",
-    "cmake.generator": "Ninja"
+
+    // 🛠 Default generator — Ninja for MSYS2/GCC
+    "cmake.generator": "Ninja",
+
+    // 🧱 Optional: specify MSVC generator when switching toolchains
+    "cmake.preferredGenerators": [
+        "Ninja",
+        "Visual Studio 17 2022"
+    ],
+
+    // 🧩 Optional: show active compiler info in status bar
+    "cmake.statusbar.visibility": "visible",
+    "cmake.statusbar.advanced": true,
+
+    // 🧠 Optional: automatically configure after opening
+    "cmake.configureOnOpen": true
 }
 

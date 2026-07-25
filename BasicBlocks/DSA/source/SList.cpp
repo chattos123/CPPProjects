@@ -30,9 +30,7 @@ SList::SList()
 ///
 /***********************************************************************/
 SList::~SList()
-{
-	psNode tempNode;
-
+{	
 	if(NULL == m_pListHead)
 	{
    		return;

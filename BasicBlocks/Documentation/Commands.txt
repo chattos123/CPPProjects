@@ -71,3 +71,61 @@ set_target_properties(SMathLib PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/bin/Debug
     RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release
 )
+
+Run a configure step first  
+Before you can build, you need to generate the build system:
+cmake -G Ninja -B build-debug -DCMAKE_BUILD_TYPE=Debug
+msvc
+cmake -G "Visual Studio 17 2022" -A x64 -B build-msvc-debug -DCMAKE_BUILD_TYPE=Debug
+
+build:
+gcc: cmake --build build-debug
+msvc: cmake --build build-msvc-debug --config Debug
+
+
+Open the Command Palette → Ctrl + Shift + P  
+Type “Tasks: Configure Default Build Task”.
+
+You’ll see a list of all tasks from your tasks.json.
+If only Ninja builds appear, it means VS Code hasn’t reloaded the file yet.
+
+Reload the window → Ctrl + Shift + P → Developer: Reload Window.
+This forces VS Code to re‑index the new MSVC tasks.
+
+Reopen the build picker (Ctrl + Shift +B) — now you should see:
+
+CMake Build (Debug, Ninja)
+
+CMake Build (Release, Ninja)
+
+CMake Build (Debug, MSVC)
+
+CMake Build (Release, MSVC)
+
+Set your preferred default 
+Highlight CMake Build (Debug, MSVC) and press Enter.
+From now on, Ctrl + Alt + B will trigger the MSVC build.
+
+# 1. Clean build directory completely
+Remove-Item -Recurse -Force build-msvc-debug
+
+# 2. Re-configure CMake from scratch
+cmake -B build-msvc-debug -G "Visual Studio 17 2022"
+
+# 3. Build the project
+cmake --build build-msvc-debug --config Debug
+cmake -G "Visual Studio 17 2022" -A x64 -B build-msvc-release -DPROJECT_VERSION="1.0.0" ; 
+cmake --build build-msvc-release --config Release
+
+cmake --build build-debug
+
+.\buildV.ps1 -Config All -Toolchain GCC
+.\buildV.ps1 -Config All -Toolchain MSVC
+
+clean:
+Remove-Item -Recurse -Force build-msvc-release, dist -ErrorAction SilentlyContinue; cmake -G "Visual Studio 17 2022" -A x64 -B build-msvc-release; cmake --build build-msvc-release --config Release
+
+help:
+.\buildV.ps1 -h
+.\buildV.ps1 -help
+Get-Help .\buildV.ps1

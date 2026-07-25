@@ -3,15 +3,10 @@
 * Description: Declares the templated SPair class similar to std::pair.
 ***********************************************************************/
 #pragma once
+#include "ExportMacro.h"
 
 #include <utility>   // for std::move
 
-
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
 
 /***********************************************************************
 * Class: SPair<T1, T2>
@@ -19,7 +14,8 @@
 * Purpose: A generic container holding two values (first, second).
 ***********************************************************************/
 template <typename T1, typename T2>
-class DSALIB_API SPair {
+class SPair
+{
 public:
     T1 first;
     T2 second;

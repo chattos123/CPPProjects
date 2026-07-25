@@ -3,12 +3,7 @@
 * Description: Declares the templated SVectorT class for a type-safe dynamic array container.
 ***********************************************************************/
 #pragma once
-
-#ifdef DSALIB_EXPORTS
-#define DSALIB_API __declspec(dllexport)
-#else
-#define DSALIB_API __declspec(dllimport)
-#endif
+#include "ExportMacro.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -21,7 +16,7 @@ template <typename T>
 * Purpose: A generic resizable vector container supporting deep copy,
 *          move semantics, iteration, and basic element operations.
 ***********************************************************************/
-class DSALIB_API SVectorT {
+class SVectorT {
 private:
     T* m_data;
     int m_size;

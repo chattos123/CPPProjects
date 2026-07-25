@@ -294,7 +294,8 @@ void sStringTester::TestUnicodeText()
 }
 
 
-void sStringTester::RunAllTests() {
+void sStringTester::RunAllTests() 
+{
     std::cout << "\n==============================\n";
     std::cout << "Running all SString tests...\n";
     std::cout << "==============================\n";

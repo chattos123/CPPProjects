@@ -1,8 +1,11 @@
 #include "sStringTester.h"
+#include <cstring>
 #include <fcntl.h>
 #include <io.h>
+#include <cassert>
 
-void sStringTester::TestConstruction() {
+void sStringTester::TestConstruction() 
+{
     std::wcout << L"\n*** Construction Test start ***\n";
     SString s1(L"Hello Wide");
     SString s2("Hello Narrow");
@@ -16,7 +19,8 @@ void sStringTester::TestConstruction() {
     std::wcout << L"*** Construction Test end ***\n\n";
 }
 
-void sStringTester::TestAssignment() {
+void sStringTester::TestAssignment() 
+{
     std::wcout << L"\n*** Assignment Test start ***\n";
     SString s1(L"Hello Wide");
     SString s3;
@@ -29,7 +33,8 @@ void sStringTester::TestAssignment() {
     std::wcout << L"*** Assignment Test end ***\n\n";
 }
 
-void sStringTester::TestConcatenation() {
+void sStringTester::TestConcatenation() 
+{
     std::wcout << L"\n*** Concatenation Test start ***\n";
     SString s1(L"Hello Wide");
     SString s2("Hello Narrow");
@@ -39,7 +44,8 @@ void sStringTester::TestConcatenation() {
     std::wcout << L"*** Concatenation Test end ***\n\n";
 }
 
-void sStringTester::TestAppend() {
+void sStringTester::TestAppend() 
+{
     std::wcout << L"\n*** Append Test start ***\n";
     SString s1(L"Hello Wide");
     SString s2("Hello Narrow");
@@ -50,7 +56,8 @@ void sStringTester::TestAppend() {
     std::wcout << L"*** Append Test end ***\n\n";
 }
 
-void sStringTester::TestCaseConversions() {
+void sStringTester::TestCaseConversions() 
+{
     std::wcout << L"\n*** Case Conversion Test start ***\n";
     SString s2("Hello Narrow");
     std::wcout << L"Uppercase: " << s2.to_upper() << std::endl;
@@ -59,21 +66,24 @@ void sStringTester::TestCaseConversions() {
     std::wcout << L"*** Case Conversion Test end ***\n\n";
 }
 
-void sStringTester::TestReverse() {
+void sStringTester::TestReverse() 
+{
     std::wcout << L"\n*** Reverse Test start ***\n";
     SString s2("Hello Narrow");
     std::wcout << L"Reversed: " << s2.revert() << std::endl;
     std::wcout << L"*** Reverse Test end ***\n\n";
 }
 
-void sStringTester::TestSubstring() {
+void sStringTester::TestSubstring() 
+{
     std::wcout << L"\n*** Substring Test start ***\n";
     SString s2("Hello Narrow");
     std::wcout << L"Substring (0,5): " << s2.substring(0, 5) << std::endl;
     std::wcout << L"*** Substring Test end ***\n\n";
 }
 
-void sStringTester::TestIndexing() {
+void sStringTester::TestIndexing() 
+{
     std::wcout << L"\n*** Indexing Test start ***\n";
     SString s2("Hello Narrow");
     wchar_t ch = s2[1];
@@ -83,7 +93,8 @@ void sStringTester::TestIndexing() {
     std::wcout << L"*** Indexing Test end ***\n\n";
 }
 
-void sStringTester::TestComparison() {
+void sStringTester::TestComparison() 
+{
     std::wcout << L"\n*** Comparison Test start ***\n";
     SString s2("Jello Narrow");
     bool match = s2.match_string(L"Jello Narrow");
@@ -91,7 +102,8 @@ void sStringTester::TestComparison() {
     std::wcout << L"*** Comparison Test end ***\n\n";
 }
 
-void sStringTester::TestClear() {
+void sStringTester::TestClear() 
+{
     std::wcout << L"\n*** Clear Test start ***\n";
     SString s2("Hello Narrow");
     s2.Clear();
@@ -99,7 +111,8 @@ void sStringTester::TestClear() {
     std::wcout << L"*** Clear Test end ***\n\n";
 }
 
-void sStringTester::TestConversions() {
+void sStringTester::TestConversions() 
+{
     std::wcout << L"\n*** Conversion Test start ***\n";
     SString s1(L"Hello Wide");
     std::wstring ws = s1.ToString();
@@ -110,7 +123,8 @@ void sStringTester::TestConversions() {
     std::wcout << L"*** Conversion Test end ***\n\n";
 }
 
-void sStringTester::TestInput() {
+void sStringTester::TestInput() 
+{
     std::wcout << L"\n*** Input Test start ***\n";
     _setmode(_fileno(stdin), _O_U16TEXT);
     _setmode(_fileno(stdout), _O_U16TEXT);
@@ -150,6 +164,93 @@ void sStringTester::TestIterator()
     auto it = std::find(s.begin(), s.end(), L'W');
     if (it != s.end()) std::wcout << L"Found character: " << *it << std::endl;
     std::cout << "*** Iterator Test end ***\n\n";
+}
+
+/**
+ * @brief Unit test to verify all implicit and explicit type casting operators of SString.
+ */
+void sStringTester::TestCastOpearator()
+{
+    std::cout << "[RUNNING] TestCastOperator()...\n";
+
+    // 1. Test Wide C-String Casting (const wchar_t*)
+    {
+        SString s(L"Hello Wide World");
+        const wchar_t* rawWide = s; // Implicit conversion
+        assert(rawWide != nullptr);
+        assert(std::wcscmp(rawWide, L"Hello Wide World") == 0);
+    }
+
+    // 2. Test Narrow UTF-8 C-String Casting (const char*)
+    {
+        SString s(L"Hello Narrow World");
+        const char* rawNarrow = s; // Implicit conversion
+        assert(rawNarrow != nullptr);
+        assert(std::strcmp(rawNarrow, "Hello Narrow World") == 0);
+    }
+
+    // 3. Test std::wstring Casting
+    {
+        SString s(L"Testing wstring");
+        std::wstring ws = static_cast<std::wstring>(s); // Explicit conversion
+        assert(ws == L"Testing wstring");
+    }
+
+    // 4. Test std::string (UTF-8) Casting
+    {
+        SString s(L"Testing string");
+        std::string str = static_cast<std::string>(s); // Explicit conversion
+        assert(str == "Testing string");
+    }
+
+    // 5. Test Integer Casting (int)
+    {
+        SString s1(L"42");
+        SString s2(L"-1024");
+        
+        int val1 = static_cast<int>(s1);
+        int val2 = static_cast<int>(s2);
+        
+        assert(val1 == 42);
+        assert(val2 == -1024);
+
+        // Test exception on invalid integer
+        bool caught = false;
+        try {
+            SString sInvalid(L"NotANumber");
+            int valInvalid = static_cast<int>(sInvalid);
+            (void)valInvalid;
+        } catch (const std::invalid_argument&) {
+            caught = true;
+        }
+        assert(caught);
+    }
+
+    // 6. Test Double Casting (double)
+    {
+        SString s1(L"3.14159");
+        SString s2(L"-0.005");
+
+        double val1 = static_cast<double>(s1);
+        double val2 = static_cast<double>(s2);
+
+        assert(std::abs(val1 - 3.14159) < 1e-5);
+        assert(std::abs(val2 - (-0.005)) < 1e-5);
+
+        // Test exception on invalid double
+        bool caught = false;
+        try {
+            SString sInvalid(L"InvalidDouble");
+            double valInvalid = static_cast<double>(sInvalid);
+            (void)valInvalid;
+        } catch (const std::invalid_argument&) {
+            caught = true;
+        }
+        assert(caught);
+    }
+
+    std::cout << "[SUCCESS] TestCastOperator() passed all assertions!\n";
+
 }
 
 void sStringTester::TestUnicodeText() 
@@ -208,6 +309,7 @@ void sStringTester::RunAllTests() {
     TestIndexing();
     TestComparison();
     TestClear();
+    TestCastOpearator();
     TestConversions();
     TestUnicodeText();
     TestTokenize();

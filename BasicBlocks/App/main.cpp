@@ -19,8 +19,7 @@ int main() {
 #else
     std::cout << "No version info available." << std::endl;
 #endif
-    
-
+    // DLL Test
     std::cout << "Calling DLL function..." << std::endl;
     helloFromDLL();
 

@@ -258,12 +258,51 @@ public:
      */
     SString& operator+=(const char* strSource);
 
-        /** 
+    /** 
      * @brief Appends another SString to this instance.
      * @param other The SString to append.
      * @return Reference to this SString after concatenation.
      */
     SString& operator+=(const SString& other);
+
+    // ---------------- Type Conversion Operators ----------------
+
+    /**
+     * @brief Conversion operator to a wide C-style string (const wchar_t*).
+     * Allows SString to be passed directly into APIs expecting const wchar_t*.
+     */
+    operator const wchar_t*() const { return c_str(); }
+
+    /**
+     * @brief Conversion operator to a narrow UTF-8 C-style string (const char*).
+     * Allows SString to be passed directly into APIs expecting const char*.
+     */
+    operator const char*() const { return c_charString(); }
+
+    /**
+     * @brief Explicit conversion operator to std::wstring.
+     */
+    explicit operator std::wstring() const { return ToString(); }
+
+    /**
+     * @brief Explicit conversion operator to UTF-8 encoded std::string.
+     */
+    explicit operator std::string() const { return ToUtf8(); }
+
+    /**
+     * @brief Explicit conversion operator to int.
+     * Converts the string representation to an integer value.
+     * @return int Parsed integer value.
+     * @throws std::invalid_argument or std::out_of_range if string is not a valid integer.
+     */
+    explicit operator int() const;
+
+    /**
+     * @brief Explicit conversion operator to double.
+     * @return double Parsed floating-point value.
+     * @throws std::invalid_argument or std::out_of_range if string is invalid.
+     */
+    explicit operator double() const;
    
     /** @brief Output stream operator. */
     DSALIB_API friend std::wostream& operator<<(std::wostream& os, const SString& s);

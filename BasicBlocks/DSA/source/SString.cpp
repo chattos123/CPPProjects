@@ -964,3 +964,47 @@ std::string SString::ToUtf8() const {
     return s;
 #endif
 }
+
+/**
+ * @brief Explicit conversion operator to int.
+ */
+SString::operator int() const 
+{
+    if (IsNullOrEmpty(*this)) 
+    {
+        throw std::invalid_argument("Cannot convert empty or null SString to int");
+    }
+    // std::wcstol converts wide string to long
+    wchar_t* endPtr = nullptr;
+    long result = std::wcstol(Str, &endPtr, 10);
+
+    // If no conversion could be performed
+    if (endPtr == Str) 
+    {
+        throw std::invalid_argument("Invalid integer format in SString");
+    }
+
+    return static_cast<int>(result);
+}
+
+/**
+ * @brief Explicit conversion operator to double.
+ */
+SString::operator double() const 
+{
+    if (IsNullOrEmpty(*this)) 
+    {
+        throw std::invalid_argument("Cannot convert empty or null SString to double");
+    }
+
+    wchar_t* endPtr = nullptr;
+    double result = std::wcstod(Str, &endPtr);
+
+    // Check if any conversion occurred
+    if (endPtr == Str) 
+    {
+        throw std::invalid_argument("Invalid double format in SString");
+    }
+
+    return result;
+}

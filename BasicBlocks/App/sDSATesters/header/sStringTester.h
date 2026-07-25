@@ -31,4 +31,5 @@ private:
     void TestTokenize();
     void TestIterator();
     void TestUnicodeText();
+    void TestCastOpearator();
 };

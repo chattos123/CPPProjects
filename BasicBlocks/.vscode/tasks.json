@@ -1,127 +1,94 @@
 {
   "version": "2.0.0",
   "tasks": [
+    // 🔧 Configure tasks
     {
-      "label": "CMake Configure (Debug, Ninja)",
-      "type": "shell",
-      "command": "cmake",
+      "label": "Configure: GCC Debug",
+      "type": "process",
+      "command": "powershell.exe",
       "args": [
-        "-G",
-        "Ninja",
-        "-B",
-        "build-debug",
-        "-DCMAKE_BUILD_TYPE=Debug",
-        "-DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe",
-        "-DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe"
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}\\build.ps1",
+        "-Config", "Debug",
+        "-Toolchain", "GCC",
+        "-ConfigureOnly"
       ],
-      "problemMatcher": "$gcc"
-    },
-    {
-      "label": "CMake Build (Debug, Ninja)",
-      "type": "shell",
-      "command": "cmake",
-      "args": [
-        "--build",
-        "build-debug"
-      ],
-      "dependsOn": "CMake Configure (Debug, Ninja)",
       "group": "build",
       "problemMatcher": "$gcc"
     },
     {
-      "label": "CMake Configure (Release, Ninja)",
-      "type": "shell",
-      "command": "cmake",
+      "label": "Configure: MSVC Debug",
+      "type": "process",
+      "command": "powershell.exe",
       "args": [
-        "-G",
-        "Ninja",
-        "-B",
-        "build-release",
-        "-DCMAKE_BUILD_TYPE=Release",
-        "-DCMAKE_C_COMPILER=C:/msys64N/ucrt64/bin/gcc.exe",
-        "-DCMAKE_CXX_COMPILER=C:/msys64N/ucrt64/bin/g++.exe"
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}\\build.ps1",
+        "-Config", "Debug",
+        "-Toolchain", "MSVC",
+        "-ConfigureOnly"
       ],
+      "group": "build",
+      "problemMatcher": "$msCompile"
+    },
+
+    // 🟢 Build tasks
+    {
+      "label": "Build: GCC Debug",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}\\build.ps1",
+        "-Config", "Debug",
+        "-Toolchain", "GCC"
+      ],
+      "group": "build",
+      "dependsOn": "Configure: GCC Debug",
       "problemMatcher": "$gcc"
     },
     {
-      "label": "CMake Build (Release, Ninja)",
-      "type": "shell",
-      "command": "cmake",
+      "label": "Build: MSVC Debug",
+      "type": "process",
+      "command": "powershell.exe",
       "args": [
-        "--build",
-        "build-release"
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}\\build.ps1",
+        "-Config", "Debug",
+        "-Toolchain", "MSVC"
       ],
-      "dependsOn": "CMake Configure (Release, Ninja)",
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      },
-      "problemMatcher": "$gcc"
+      "group": "build",
+      "dependsOn": "Configure: MSVC Debug",
+      "problemMatcher": "$msCompile"
     },
     {
-      "label": "CMake Configure (Debug, MSVC)",
-      "type": "shell",
-      "command": "cmake",
+      "label": "Build: All (GCC + MSVC)",
+      "type": "process",
+      "command": "powershell.exe",
       "args": [
-        "-G",
-        "Visual Studio 17 2022",
-        "-A",
-        "x64",
-        "-B",
-        "build-msvc-debug",
-        "-DCMAKE_BUILD_TYPE=Debug"
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}\\build.ps1",
+        "-Config", "All",
+        "-Toolchain", "Both"
       ],
-      "problemMatcher": "$msCompile",
       "group": {
         "kind": "build",
         "isDefault": true
-      }
-    },
-    {
-      "label": "CMake Build (Debug, MSVC)",
-      "type": "shell",
-      "command": "cmake",
-      "args": [
-        "--build",
-        "build-msvc-debug",
-        "--config",
-        "Debug"
-      ],
-      "dependsOn": "CMake Configure (Debug, MSVC)",
-      "group": "build",
-      "problemMatcher": "$msCompile"
-    },
-    {
-      "label": "CMake Configure (Release, MSVC)",
-      "type": "shell",
-      "command": "cmake",
-      "args": [
-        "-G",
-        "Visual Studio 17 2022",
-        "-A",
-        "x64",
-        "-B",
-        "build-msvc-release",
-        "-DCMAKE_BUILD_TYPE=Release"
-      ],
-      "problemMatcher": "$msCompile"
-    },
-    {
-      "label": "CMake Build (Release, MSVC)",
-      "type": "shell",
-      "command": "cmake",
-      "args": [
-        "--build",
-        "build-msvc-release",
-        "--config",
-        "Release"
-      ],
-      "dependsOn": "CMake Configure (Release, MSVC)",
-      "group": {
-        "kind": "build",
-        "isDefault": false
       },
-      "problemMatcher": "$msCompile"
+      "problemMatcher": ["$gcc", "$msCompile"]
+    },
+
+    // 🧹 Clean task
+    {
+      "label": "Clean Workspace",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}\\build.ps1",
+        "-CleanOnly"
+      ],
+      "group": "build",
+      "problemMatcher": []
     }
   ]
 }

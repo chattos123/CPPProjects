@@ -129,3 +129,96 @@ help:
 .\buildV.ps1 -h
 .\buildV.ps1 -help
 Get-Help .\buildV.ps1
+
+Keyboard
+
+Step 2: Assign Keybindings in VS Code
+Press Ctrl + Shift + P in VS Code and select Preferences: Open Keyboard Shortcuts (JSON).
+
+Add these keybindings to map direct key combinations to your tasks:
+[
+  [
+  {
+    "key": "ctrl+alt+d",
+    "command": "workbench.action.debug.start"
+  },
+  {
+    "key": "ctrl+alt+r",
+    "command": "workbench.action.debug.run"
+  },
+  {
+    "key": "ctrl+alt+b",
+    "command": "workbench.action.tasks.runTask",
+    "args": {
+      "task": "Build: All (GCC + MSVC)"
+    }
+  },
+  {
+    "key": "ctrl+alt+m",
+    "command": "workbench.action.tasks.runTask",
+    "args": {
+      "task": "Build: MSVC Release"
+    }
+  },
+  {
+    "key": "ctrl+alt+g",
+    "command": "workbench.action.tasks.runTask",
+    "args": {
+      "task": "Build: GCC Release"
+    }
+  },
+  {
+    "key": "ctrl+alt+c",
+    "command": "workbench.action.tasks.runTask",
+    "args": {
+      "task": "Clean Workspace"
+    }
+  },
+  {
+    "key": "ctrl+alt+d",
+    "command": "workbench.action.debug.start"
+  }
+]
+]
+current // Place your key bindings in this file to override the defaults
+[
+  {
+    "key": "ctrl+alt+b",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Build: All (GCC + MSVC)"
+  },
+  {
+    "key": "ctrl+alt+m",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Build: MSVC Release"
+  },
+  {
+    "key": "ctrl+alt+g",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Build: GCC Release"
+  },
+  {
+    "key": "ctrl+alt+c",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Clean Workspace"
+  },
+  {
+    "key": "ctrl+alt+d",
+    "command": "workbench.action.debug.start"
+  }
+
+  "key": "ctrl+alt+r",
+  "command": "workbench.action.reloadWindow"
+
+
+
+
+
+  In VS Code, you can reload the window/workspace using the Command Palette:
+
+Press Ctrl + Shift + P (or F1).
+
+Type Reload Window.
+
+Press Enter.
+]

@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Configures, compiles, and installs CMake targets across GCC/MinGW (Ninja) and MSVC (Visual Studio 2022)
-    in Debug and/or Release configurations, staging binaries into dist/gcc and dist/msvc.
+    in Debug and/or Release configurations, staging binaries into dist/gcc/bin and dist/msvc/bin.
 
 .PARAMETER Config
     Specifies the build configuration: 'Debug', 'Release', or 'All'. Default is 'All'.
@@ -14,6 +14,9 @@
 
 .PARAMETER CleanOnly
     Cleans all build output directories ('build-*' and 'dist') and exits without building.
+
+.PARAMETER ConfigureOnly
+    Runs cmake configure step only (no build/install).
 
 .PARAMETER Help
     Displays help and usage documentation.
@@ -27,6 +30,7 @@ param(
     [string]$Toolchain = "Both",
 
     [switch]$CleanOnly,
+    [switch]$ConfigureOnly,
 
     [Alias("h")]
     [switch]$Help
@@ -53,13 +57,11 @@ function Perform-Clean {
             Remove-Item -Recurse -Force $folder -ErrorAction SilentlyContinue
         }
     }
-    # Clean build.log as well
     if (Test-Path "build.log") {
         Remove-Item -Force "build.log" -ErrorAction SilentlyContinue
     }
 }
 
-# If -CleanOnly switch is passed, clean and EXIT immediately!
 if ($CleanOnly) {
     Perform-Clean
     Write-Host "=== Clean complete! No build performed. ===" -ForegroundColor Green
@@ -83,13 +85,9 @@ Write-Host "`n=== Using version stamp: $version ===" -ForegroundColor Cyan
 # -------------------------------------------------------------------
 function Get-CMakeGeneratorArgs($buildType, $targetToolchain) {
     switch ($targetToolchain) {
-        "Ninja" {
-            return "-G Ninja"
-        }
-        "MSVC" {
-            return '-G "Visual Studio 17 2022" -A x64'
-        }
-        "GCC" {
+        "Ninja" { return "-G Ninja" }
+        "MSVC"  { return '-G "Visual Studio 17 2022" -A x64' }
+        "GCC"   {
             $gccPath = "C:/msys64N/ucrt64/bin/gcc.exe"
             $gxxPath = "C:/msys64N/ucrt64/bin/g++.exe"
             if (Test-Path $gccPath) {
@@ -107,22 +105,26 @@ function Get-CMakeGeneratorArgs($buildType, $targetToolchain) {
 function Run-Build($buildType, $folder, $targetToolchain) {
     $genArgs = Get-CMakeGeneratorArgs -buildType $buildType -targetToolchain $targetToolchain
 
-    # Absolute path for dist/msvc or dist/gcc
     $distSubDirName = if ($targetToolchain -eq "MSVC") { "msvc" } else { "gcc" }
-    $distSubDirAbsPath = Join-Path (Get-Location).Path "dist/$distSubDirName"
+    $distBinAbsPath = Join-Path (Get-Location).Path "dist/$distSubDirName/bin"
 
     Write-Host "`n=== Configuring $buildType [$targetToolchain] -> $folder ===" -ForegroundColor Yellow
     $cmakeConfigCmd = "cmake $genArgs -B `"$folder`" -DCMAKE_BUILD_TYPE=$buildType -DPROJECT_VERSION=`"$version`""
     Write-Host ">> $cmakeConfigCmd" -ForegroundColor Gray
     Invoke-Expression $cmakeConfigCmd | Tee-Object -FilePath build.log -Append
 
+    if ($ConfigureOnly) {
+        Write-Host "=== ConfigureOnly mode: skipping build/install ===" -ForegroundColor Magenta
+        return
+    }
+
     Write-Host "`n=== Building $buildType [$targetToolchain] ===" -ForegroundColor Yellow
     $cmakeBuildCmd = "cmake --build `"$folder`" --config $buildType"
     Write-Host ">> $cmakeBuildCmd" -ForegroundColor Gray
     Invoke-Expression $cmakeBuildCmd | Tee-Object -FilePath build.log -Append
 
-    Write-Host "`n=== Installing $buildType [$targetToolchain] -> $distSubDirAbsPath ===" -ForegroundColor Yellow
-    $cmakeInstallCmd = "cmake --install `"$folder`" --config $buildType --prefix `"$distSubDirAbsPath`""
+    Write-Host "`n=== Installing $buildType [$targetToolchain] -> $distBinAbsPath ===" -ForegroundColor Yellow
+    $cmakeInstallCmd = "cmake --install `"$folder`" --config $buildType --prefix `"$distBinAbsPath`""
     Write-Host ">> $cmakeInstallCmd" -ForegroundColor Gray
     Invoke-Expression $cmakeInstallCmd | Tee-Object -FilePath build.log -Append
 }
@@ -152,7 +154,7 @@ else {
 
 Write-Host "`n=======================================================" -ForegroundColor Green
 Write-Host "=== Build + Install complete! ===" -ForegroundColor Green
-Write-Host "MSVC binaries staged at: $(Join-Path (Get-Location).Path 'dist/msvc')" -ForegroundColor Green
-Write-Host "GCC binaries staged at:  $(Join-Path (Get-Location).Path 'dist/gcc')" -ForegroundColor Green
+Write-Host "MSVC binaries staged at: $(Join-Path (Get-Location).Path 'dist/msvc/bin')" -ForegroundColor Green
+Write-Host "GCC binaries staged at:  $(Join-Path (Get-Location).Path 'dist/gcc/bin')" -ForegroundColor Green
 Write-Host "Log file written to:     $(Join-Path (Get-Location).Path 'build.log')" -ForegroundColor Green
 Write-Host "=======================================================" -ForegroundColor Green

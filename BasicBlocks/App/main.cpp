@@ -5,7 +5,7 @@
 
 int main() {
 
-        std::cout << "Calculator App Version: ";
+    std::cout << "Calculator App Version: ";
     #ifdef PROJECT_VERSION
         std::cout << PROJECT_VERSION;
     #else

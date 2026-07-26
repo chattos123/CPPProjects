@@ -1,3 +1,9 @@
+/*
+ * File: sVectorTester.h
+ * Author: Soumyajit C
+ * Description: Declaration of the vector-related tester class used by the application.
+ */
+
 #pragma once
 #include "ExportMacro.h"
 #include "ITestRunner.h"
@@ -12,10 +18,19 @@
  */
 class sVectorTester : public ITestRunner {
 public:
-    /** @brief Runs all vector tests (override from ITestRunner). */
+    /**
+     * @brief Executes all vector-related tests.
+     */
     void RunAllTests() override;
 
 private:
+    /**
+     * @brief Tests the behavior of the SVector container.
+     */
     void TestVector();
+
+    /**
+     * @brief Tests the behavior of the templated SVectorT container.
+     */
     void TestVectorT();
 };

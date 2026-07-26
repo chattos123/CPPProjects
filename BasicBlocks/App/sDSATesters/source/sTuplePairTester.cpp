@@ -1,5 +1,16 @@
+/*
+ * File: sTuplePairTester.cpp
+ * Author: Soumyajit C
+ * Description: Implements the tuple and pair tester methods for the application.
+ */
+
 #include "sTuplePairTester.h"
 
+/**
+ * @brief Tests the behavior of the SPair container.
+ * @remark This method validates pair creation, display output, and ordering comparisons.
+ * @return void
+ */
 void sTuplePairTester::TestSPair() {
     std::cout << "\n*** TestSPair start ***\n";
     std::cout << "SPair iter tests start.\n";
@@ -21,6 +32,11 @@ void sTuplePairTester::TestSPair() {
     std::cout << "*** TestSPair end ***\n";
 }
 
+/**
+ * @brief Tests the behavior of the STuple container.
+ * @remark This method validates tuple construction and element access using get<>().
+ * @return void
+ */
 void sTuplePairTester::TestTuple() {
     std::cout << "\n*** TestTuple start ***\n";
     std::cout << "STuple iter tests start.\n";
@@ -37,6 +53,11 @@ void sTuplePairTester::TestTuple() {
     std::cout << "*** TestTuple end ***\n";
 }
 
+/**
+ * @brief Executes all SPair and STuple-related tests.
+ * @remark This method runs the full tuple and pair test sequence in order.
+ * @return void
+ */
 void sTuplePairTester::RunAllTests() {
     std::cout << "\n==============================\n";
     std::cout << "Running all SPair/STuple tests...\n";

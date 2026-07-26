@@ -1,3 +1,9 @@
+/*
+ * File: sStringTester.h
+ * Author: Soumyajit C
+ * Description: Declaration of the string-related tester class used by the application.
+ */
+
 #pragma once
 #include "ExportMacro.h"
 #include "ITestRunner.h"
@@ -12,25 +18,89 @@
  */
 class sStringTester : public ITestRunner {
 public:
-    /** @brief Runs all SString tests (override from ITestRunner). */
+    /**
+     * @brief Executes all SString-related tests.
+     */
     void RunAllTests() override;
 
 private:
-    // SRP: each test focuses on one responsibility
+    /**
+     * @brief Tests string construction and initialization.
+     */
     void TestConstruction();
+
+    /**
+     * @brief Tests assignment operations for SString.
+     */
     void TestAssignment();
+
+    /**
+     * @brief Tests string concatenation behavior.
+     */
     void TestConcatenation();
+
+    /**
+     * @brief Tests append operations for SString.
+     */
     void TestAppend();
+
+    /**
+     * @brief Tests case conversion functions.
+     */
     void TestCaseConversions();
+
+    /**
+     * @brief Tests reverse operations.
+     */
     void TestReverse();
+
+    /**
+     * @brief Tests substring extraction behavior.
+     */
     void TestSubstring();
+
+    /**
+     * @brief Tests indexing and access operations.
+     */
     void TestIndexing();
+
+    /**
+     * @brief Tests comparison operators and methods.
+     */
     void TestComparison();
+
+    /**
+     * @brief Tests clearing the string contents.
+     */
     void TestClear();
+
+    /**
+     * @brief Tests conversion helpers for the string type.
+     */
     void TestConversions();
+
+    /**
+     * @brief Tests input handling and parsing behavior.
+     */
     void TestInput();
+
+    /**
+     * @brief Tests tokenization behavior.
+     */
     void TestTokenize();
+
+    /**
+     * @brief Tests iterator support for SString.
+     */
     void TestIterator();
+
+    /**
+     * @brief Tests support for Unicode text handling.
+     */
     void TestUnicodeText();
+
+    /**
+     * @brief Tests the cast operator behavior.
+     */
     void TestCastOpearator();
 };

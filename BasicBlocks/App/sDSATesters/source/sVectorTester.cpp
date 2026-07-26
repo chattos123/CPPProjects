@@ -1,5 +1,28 @@
+/**
+ * @file sVectorTester.cpp
+ * @brief Implementation of test suites for SVector and SVectorT custom dynamic array classes.
+ * @author Soumyajit C
+ * @date 2026
+ */
+
 #include "sVectorTester.h"
 
+/**
+ * @class sVectorTester
+ * @brief Test runner class designed to validate memory management, element access, 
+ *        operator overloads, and iterator capabilities of SVector and SVectorT.
+ */
+
+/**
+ * @brief Executes unit tests for the non-templated SVector class.
+ *
+ * Exercises core functionality including push_back, pop_back, element modification via 
+ * subscript operator, copy constructor, assignment operator, and vector concatenation (+).
+ *
+ * @param None
+ * @return void
+ * @remark Outputs test results directly to std::cout with expected assertions noted in comments.
+ */
 void sVectorTester::TestVector() {
     std::cout << "\n*** TestVector start ***\n";
     std::cout << "***Testing SVector...***\n";
@@ -43,6 +66,17 @@ void sVectorTester::TestVector() {
     std::cout << "*** TestVector end ***\n";
 }
 
+/**
+ * @brief Executes unit tests for the generic templated SVectorT class.
+ *
+ * Tests template instantiation, Rule of Three operations, arithmetic operator overloading, 
+ * and custom iterator traversal using begin() and end().
+ *
+ * @param None
+ * @return void
+ * @remark Validates that template semantics mirror the standard non-templated vector behavior 
+ *         while enabling STL-style iterator loops.
+ */
 void sVectorTester::TestVectorT() {
     std::cout << "\n*** TestVectorT start ***\n";
     std::cout << "Testing SVectorT...\n";
@@ -92,6 +126,15 @@ void sVectorTester::TestVectorT() {
     std::cout << "*** TestVectorT end ***\n";
 }
 
+/**
+ * @brief Main entry point for running the test suite.
+ *
+ * Sequentially invokes TestVector() and TestVectorT() with visual section banners.
+ *
+ * @param None
+ * @return void
+ * @remark Designed to be called directly from main() or an external test driver.
+ */
 void sVectorTester::RunAllTests() {
     std::cout << "\n==============================\n";
     std::cout << "Running all Vector tests...\n";

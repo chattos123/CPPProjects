@@ -1,6 +1,16 @@
+/*
+ * File: sListTester.cpp
+ * Author: Soumyajit C
+ * Description: Implements the list-related tester methods for the application.
+ */
+
 #include "sListTester.h"
 
-void sListTester::TestList() {
+/**
+ * @brief Tests the behavior of the SList container.
+ */
+void sListTester::TestList() 
+{
     std::cout << "\n*** TestList start ***\n";
     std::cout << "***Testing SList...***\n";
 
@@ -20,7 +30,11 @@ void sListTester::TestList() {
     std::cout << "*** TestList end ***\n";
 }
 
-void sListTester::TestListT() {
+/**
+ * @brief Tests the behavior of the templated SListT container.
+ */
+void sListTester::TestListT() 
+{
     std::cout << "\n*** TestListT start ***\n";
     std::cout << "***Testing SListT...***\n";
 
@@ -41,7 +55,11 @@ void sListTester::TestListT() {
     std::cout << "*** TestListT end ***\n";
 }
 
-void sListTester::RunAllTests() {
+/**
+ * @brief Executes all list-related tests.
+ */
+void sListTester::RunAllTests() 
+{
     std::cout << "\n==============================\n";
     std::cout << "Running all List tests...\n";
     std::cout << "==============================\n";

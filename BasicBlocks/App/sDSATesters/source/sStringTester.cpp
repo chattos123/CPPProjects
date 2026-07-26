@@ -1,3 +1,9 @@
+/*
+ * File: sStringTester.cpp
+ * Author: Soumyajit C
+ * Description: Implements the SString-related tester methods for the application.
+ */
+
 #include "sStringTester.h"
 #include <cstring>
 #include <cassert>
@@ -10,6 +16,11 @@
     #include <windows.h>
 #endif
 
+/**
+ * @brief Tests construction and initialization behavior of SString.
+ * @remark This method prints the test output to the console for inspection.
+ * @return void
+ */
 void sStringTester::TestConstruction() 
 {
     std::wcout << L"\n*** Construction Test start ***\n";
@@ -25,6 +36,11 @@ void sStringTester::TestConstruction()
     std::wcout << L"*** Construction Test end ***\n\n";
 }
 
+/**
+ * @brief Tests assignment operations for SString.
+ * @remark This method validates wide, narrow, and object-based assignment paths.
+ * @return void
+ */
 void sStringTester::TestAssignment() 
 {
     std::wcout << L"\n*** Assignment Test start ***\n";
@@ -39,6 +55,11 @@ void sStringTester::TestAssignment()
     std::wcout << L"*** Assignment Test end ***\n\n";
 }
 
+/**
+ * @brief Tests concatenation behavior for SString.
+ * @remark This method confirms string concatenation with string and C-string operands.
+ * @return void
+ */
 void sStringTester::TestConcatenation() 
 {
     std::wcout << L"\n*** Concatenation Test start ***\n";
@@ -50,6 +71,11 @@ void sStringTester::TestConcatenation()
     std::wcout << L"*** Concatenation Test end ***\n\n";
 }
 
+/**
+ * @brief Tests append operations for SString.
+ * @remark This method exercises the compound append operator with different input types.
+ * @return void
+ */
 void sStringTester::TestAppend() 
 {
     std::wcout << L"\n*** Append Test start ***\n";
@@ -62,6 +88,11 @@ void sStringTester::TestAppend()
     std::wcout << L"*** Append Test end ***\n\n";
 }
 
+/**
+ * @brief Tests case conversion helpers of SString.
+ * @remark This method validates uppercase, lowercase, and toggle-case operations.
+ * @return void
+ */
 void sStringTester::TestCaseConversions() 
 {
     std::wcout << L"\n*** Case Conversion Test start ***\n";
@@ -72,6 +103,11 @@ void sStringTester::TestCaseConversions()
     std::wcout << L"*** Case Conversion Test end ***\n\n";
 }
 
+/**
+ * @brief Tests reverse operations for SString.
+ * @remark This method verifies the reversal logic for string content.
+ * @return void
+ */
 void sStringTester::TestReverse() 
 {
     std::wcout << L"\n*** Reverse Test start ***\n";
@@ -80,6 +116,11 @@ void sStringTester::TestReverse()
     std::wcout << L"*** Reverse Test end ***\n\n";
 }
 
+/**
+ * @brief Tests substring extraction behavior.
+ * @remark This method validates substring creation from a given range.
+ * @return void
+ */
 void sStringTester::TestSubstring() 
 {
     std::wcout << L"\n*** Substring Test start ***\n";
@@ -88,6 +129,11 @@ void sStringTester::TestSubstring()
     std::wcout << L"*** Substring Test end ***\n\n";
 }
 
+/**
+ * @brief Tests indexing and character access behavior.
+ * @remark This method verifies both read and write access through the index operator.
+ * @return void
+ */
 void sStringTester::TestIndexing() 
 {
     std::wcout << L"\n*** Indexing Test start ***\n";
@@ -99,6 +145,11 @@ void sStringTester::TestIndexing()
     std::wcout << L"*** Indexing Test end ***\n\n";
 }
 
+/**
+ * @brief Tests comparison operations for SString.
+ * @remark This method validates matching logic using the string comparison helper.
+ * @return void
+ */
 void sStringTester::TestComparison() 
 {
     std::wcout << L"\n*** Comparison Test start ***\n";
@@ -108,6 +159,11 @@ void sStringTester::TestComparison()
     std::wcout << L"*** Comparison Test end ***\n\n";
 }
 
+/**
+ * @brief Tests clearing the contents of SString.
+ * @remark This method confirms that the string becomes empty after clearing.
+ * @return void
+ */
 void sStringTester::TestClear() 
 {
     std::wcout << L"\n*** Clear Test start ***\n";
@@ -117,6 +173,11 @@ void sStringTester::TestClear()
     std::wcout << L"*** Clear Test end ***\n\n";
 }
 
+/**
+ * @brief Tests conversion helpers for SString.
+ * @remark This method checks conversions to wide string, UTF-8, and C-string formats.
+ * @return void
+ */
 void sStringTester::TestConversions() 
 {
     std::wcout << L"\n*** Conversion Test start ***\n";
@@ -129,6 +190,11 @@ void sStringTester::TestConversions()
     std::wcout << L"*** Conversion Test end ***\n\n";
 }
 
+/**
+ * @brief Tests user input handling for SString.
+ * @remark This method reads a line from standard input and stores it in the string.
+ * @return void
+ */
 void sStringTester::TestInput() 
 {
     std::wcout << L"\n*** Input Test start ***\n";
@@ -152,6 +218,11 @@ void sStringTester::TestInput()
 #endif
 }
 
+/**
+ * @brief Tests tokenization behavior of SString.
+ * @remark This method validates default and custom delimiter splitting.
+ * @return void
+ */
 void sStringTester::TestTokenize()
 {
     std::wcout << L"\n*** Tokenize Test start ***\n";
@@ -165,6 +236,11 @@ void sStringTester::TestTokenize()
     std::wcout << L"*** Tokenize Test end ***\n\n";
 }
 
+/**
+ * @brief Tests iterator support for SString.
+ * @remark This method verifies range-based iteration and character lookup through iterators.
+ * @return void
+ */
 void sStringTester::TestIterator() 
 {
     std::cout << "\n*** Iterator Test start ***\n";
@@ -177,7 +253,9 @@ void sStringTester::TestIterator()
 }
 
 /**
- * @brief Unit test to verify all implicit and explicit type casting operators of SString.
+ * @brief Tests implicit and explicit cast operators of SString.
+ * @remark This method validates conversions to wide strings, narrow strings, and numeric types.
+ * @return void
  */
 void sStringTester::TestCastOpearator()
 {
@@ -261,6 +339,11 @@ void sStringTester::TestCastOpearator()
     std::cout << "[SUCCESS] TestCastOperator() passed all assertions!\n";
 }
 
+/**
+ * @brief Tests Unicode text handling for SString.
+ * @remark This method validates Unicode output, tokenization, and iteration behavior.
+ * @return void
+ */
 void sStringTester::TestUnicodeText() 
 {
 #if defined(_WIN32)
@@ -314,6 +397,11 @@ void sStringTester::TestUnicodeText()
 #endif
 }
 
+/**
+ * @brief Executes all SString-related tests.
+ * @remark This method runs the full test suite in a defined order and prints the results.
+ * @return void
+ */
 void sStringTester::RunAllTests() 
 {
     std::cout << "\n==============================\n";

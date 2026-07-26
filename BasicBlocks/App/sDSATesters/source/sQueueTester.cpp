@@ -1,6 +1,14 @@
-// sQueueTester.cpp
+/*
+ * File: sQueueTester.cpp
+ * Author: Soumyajit C
+ * Description: Implements the queue-related tester methods for the application.
+ */
+
 #include "sQueueTester.h"
 
+/**
+ * @brief Tests the behavior of the SQueue container.
+ */
 void sQueueTester::TestQueue() 
 {
     std::cout << "***Testing SQueue...***\n";
@@ -14,6 +22,9 @@ void sQueueTester::TestQueue()
     std::cout << "***SQueue tests completed.***\n\n";
 }
 
+/**
+ * @brief Tests the behavior of the templated SQueueT container.
+ */
 void sQueueTester::TestQueueT() 
 {
     std::cout << "***Testing SQueueT...***\n";
@@ -35,6 +46,9 @@ void sQueueTester::TestQueueT()
     std::cout << "***SQueueT tests completed.***\n\n";
 }
 
+/**
+ * @brief Executes all queue-related tests.
+ */
 void sQueueTester::RunAllTests()
 {
     std::cout << "\n==============================\n";

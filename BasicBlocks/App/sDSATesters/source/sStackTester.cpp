@@ -1,5 +1,14 @@
+/*
+ * File: sStackTester.cpp
+ * Author: Soumyajit C
+ * Description: Implements the stack-related tester methods for the application.
+ */
+
 #include "sStackTester.h"
 
+/**
+ * @brief Tests the behavior of the SStack container.
+ */
 void sStackTester::TestStack() {
     std::cout << "\n*** TestStack start ***\n";
     SStack stack;
@@ -11,6 +20,9 @@ void sStackTester::TestStack() {
     std::cout << "*** TestStack end ***\n";
 }
 
+/**
+ * @brief Tests the behavior of the templated SStackT container.
+ */
 void sStackTester::TestStackT() {
     std::cout << "\n*** TestStackT start ***\n";
 
@@ -36,6 +48,9 @@ void sStackTester::TestStackT() {
     std::cout << "*** TestStackT end ***\n";
 }
 
+/**
+ * @brief Tests the behavior of the SListStackT container.
+ */
 void sStackTester::TestListStack() {
     std::cout << "\n*** TestListStack start ***\n";
 
@@ -61,6 +76,9 @@ void sStackTester::TestListStack() {
     std::cout << "*** TestListStack end ***\n";
 }
 
+/**
+ * @brief Executes all stack-related tests.
+ */
 void sStackTester::RunAllTests() {
     std::cout << "\n==============================\n";
     std::cout << "Running all Stack tests...\n";

@@ -1,8 +1,21 @@
+/*
+ * File: main.cpp
+ * Author: Soumyajit C
+ * Description: Entry point for the BasicBlocks test application.
+ */
+
 #include <iostream>
 #include <string>
 #include "SMathLib.h"
 #include "STestFactory.h"
 
+/**
+ * Main entry point for the application.
+ * Initializes the test framework, runs all registered testers,
+ * and exits with a status code.
+ *
+ * @return int Exit status code (0 for success).
+ */
 int main() {
 
     std::cout << "Calculator App Version: ";

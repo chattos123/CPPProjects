@@ -1,3 +1,9 @@
+/*
+ * File: sHashTester.h
+ * Author: Soumyajit C
+ * Description: Declaration of the hash-related tester class used by the application.
+ */
+
 #pragma once
 #include "ExportMacro.h"
 #include "SHashMap.h"
@@ -30,12 +36,29 @@ struct SStringHash
  */
 class sHashTester : public ITestRunner {
 public:
-    /** @brief Runs all tests (override from ITestRunner). */
+    /**
+     * @brief Executes all hash and dictionary tests.
+     */
     void RunAllTests() override;
 
 private:
+    /**
+     * @brief Tests std::unordered_map integration with SHashMap.
+     */
     void TestHashMapStd();
+
+    /**
+     * @brief Tests custom hashing with SString keys.
+     */
     void TestHashMapCustomHash();
+
+    /**
+     * @brief Tests collision handling in the hash map.
+     */
     void TestHashMapCollision();
+
+    /**
+     * @brief Tests the SMapDictionary behavior.
+     */
     void TestSMapDictionary();
 };

@@ -1,6 +1,14 @@
+/*
+ * File: sHashTester.cpp
+ * Author: Soumyajit C
+ * Description: Implements the hash-related tester methods for the application.
+ */
+
 #include "sHashTester.h"
 
-// Private test functions
+/**
+ * @brief Tests the standard hash map behavior.
+ */
 void sHashTester::TestHashMapStd() 
 {
     std::cout << "\n*** testHashMapStd start ***\n";
@@ -21,6 +29,9 @@ void sHashTester::TestHashMapStd()
     std::cout << "*** testHashMapStd end ***\n";
 }
 
+/**
+ * @brief Tests custom hashing with SString keys.
+ */
 void sHashTester::TestHashMapCustomHash()
 {
     std::cout << "\n*** testHashMapCustomHash start ***\n";
@@ -42,6 +53,9 @@ void sHashTester::TestHashMapCustomHash()
     std::cout << "*** testHashMapCustomHash end ***\n";
 }
 
+/**
+ * @brief Tests collision handling in the hash map.
+ */
 void sHashTester::TestHashMapCollision() {
     std::cout << "\n*** testHashMapCollision start ***\n";
     struct BadHash {
@@ -63,6 +77,9 @@ void sHashTester::TestHashMapCollision() {
     std::cout << "*** testHashMapCollision end ***\n";
 }
 
+/**
+ * @brief Tests the behavior of SMapDictionary.
+ */
 void sHashTester::TestSMapDictionary()
 {
     std::cout << "SMapDirectory tests start.\n";
@@ -81,7 +98,9 @@ void sHashTester::TestSMapDictionary()
 }
 
 
-// Public RunAllTests
+/**
+ * @brief Executes all hash and dictionary tests.
+ */
 void sHashTester::RunAllTests() {
     std::cout << "\n==============================\n";
     std::cout << "Running all SHashMap tests...\n";

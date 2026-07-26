@@ -1,9 +1,17 @@
+/*
+ * File: ITestRunner.h
+ * Author: Soumyajit C
+ * Description: Interface for test runners used by the application.
+ */
+
 #pragma once
 
 class ITestRunner {
 public:
     virtual ~ITestRunner() = default;
 
-    // This must match exactly in name, return type, and parameters
+    /**
+     * Executes all tests provided by the implementing test runner.
+     */
     virtual void RunAllTests() = 0;
 };

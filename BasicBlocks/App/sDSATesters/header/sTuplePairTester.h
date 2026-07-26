@@ -1,3 +1,9 @@
+/*
+ * File: sTuplePairTester.h
+ * Author: Soumyajit C
+ * Description: Declaration of the tuple and pair tester class used by the application.
+ */
+
 #pragma once
 #include "ExportMacro.h"
 #include "ITestRunner.h"
@@ -13,10 +19,19 @@
  */
 class sTuplePairTester : public ITestRunner {
 public:
-    /** @brief Runs all SPair/STuple tests (override from ITestRunner). */
+    /**
+     * @brief Executes all SPair and STuple-related tests.
+     */
     void RunAllTests() override;
 
 private:
+    /**
+     * @brief Tests the behavior of the SPair container.
+     */
     void TestSPair();
+
+    /**
+     * @brief Tests the behavior of the STuple container.
+     */
     void TestTuple();
 };

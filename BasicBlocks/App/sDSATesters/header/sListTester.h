@@ -1,3 +1,9 @@
+/*
+ * File: sListTester.h
+ * Author: Soumyajit C
+ * Description: Declaration of the list-related tester class used by the application.
+ */
+
 #pragma once
 #include "ExportMacro.h"
 #include "ITestRunner.h"
@@ -12,10 +18,19 @@
  */
 class sListTester : public ITestRunner {
 public:
-    /** @brief Runs all list tests (override from ITestRunner). */
+    /**
+     * @brief Executes all list-related tests.
+     */
     void RunAllTests() override;
 
 private:
+    /**
+     * @brief Tests the behavior of the SList container.
+     */
     void TestList();
+
+    /**
+     * @brief Tests the behavior of the templated SListT container.
+     */
     void TestListT();
 };

@@ -144,3 +144,19 @@ classDiagram
 ```
 
 The test architecture provides an extensible, decoupled, and hierarchical test execution environment. Individual data structure and mathematical module tests are encapsulated into concrete leaf runners, which are then aggregated into higher-level domain suites (`sMathTester` and `sDSATester`). A static factory handles context-driven instantiation, while the top-level `STestEngine` drives full lifecycle execution.
+
+## 2. Design Patterns Applied
+- **Composite Pattern**: Suites (`sMathTester`, `sDSATester`) aggregate multiple `ITestRunner` implementations.  
+- **Factory Pattern**: `STestFactory` creates suites based on `TestContext`.  
+- **Strategy/Polymorphism**: Each tester implements `ITestRunner::RunAllTests()` differently. 
+
+## 3. Interface & Factory Specification
+
+### 3.1 ITestRunner Interface
+```cpp
+class ITestRunner {
+public:
+    virtual ~ITestRunner() {}
+    virtual void RunAllTests() = 0;
+};
+```

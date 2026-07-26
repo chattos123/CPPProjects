@@ -141,5 +141,6 @@ classDiagram
     STestFactory ..> TestContext : Evaluates Scope
     STestFactory ..> sMathTester : Instantiates
     STestFactory ..> sDSATester : Instantiates
+```
 
 The test architecture provides an extensible, decoupled, and hierarchical test execution environment. Individual data structure and mathematical module tests are encapsulated into concrete leaf runners, which are then aggregated into higher-level domain suites (`sMathTester` and `sDSATester`). A static factory handles context-driven instantiation, while the top-level `STestEngine` drives full lifecycle execution.

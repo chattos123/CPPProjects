@@ -181,3 +181,72 @@ public:
     virtual void RunAllTests() = 0;
 };
 ```
+### 3.1 ITestRunner Interface
+```cpp
+class ITestRunner {
+public:
+    virtual ~ITestRunner() {}
+    virtual void RunAllTests() = 0;
+};
+```
+
+### 3.2 TestContext Enumeration
+```cpp
+enum class TestContext {
+    Math,
+    DSA,
+    All
+};
+```
+
+### 3.3 STestFactory Header & Implementation
+
+**Header (`STestFactory.h`):**
+```cpp
+#pragma once
+#include "ITestRunner.h"
+#include "sMathTester.h"
+#include "sDSATester.h"
+#include <vector>
+#include <memory>
+
+class STestFactory {
+public:
+    static std::vector<std::unique_ptr<ITestRunner>> CreateTesters(TestContext ctx);
+};
+```
+
+**Implementation (`STestFactory.cpp`):**
+```cpp
+#include "STestFactory.h"
+#include <iostream>
+
+std::vector<std::unique_ptr<ITestRunner>> STestFactory::CreateTesters(TestContext ctx) {
+    std::vector<std::unique_ptr<ITestRunner>> testers;
+
+    switch (ctx) {
+        case TestContext::Math:
+            std::cout << "Factory: Providing Math testers...\n";
+            testers.emplace_back(std::make_unique<sMathTester>());
+            break;
+
+        case TestContext::DSA:
+            std::cout << "Factory: Providing DSA testers...\n";
+            testers.emplace_back(std::make_unique<sDSATester>());
+            break;
+
+        case TestContext::All:
+            std::cout << "Factory: Providing ALL testers (Math + DSA)...\n";
+            testers.emplace_back(std::make_unique<sMathTester>());
+            testers.emplace_back(std::make_unique<sDSATester>());
+            break;
+
+        default:
+            std::cout << "Factory: Invalid context, no testers created.\n";
+            break;
+    }
+
+    return testers;
+}
+```
+```

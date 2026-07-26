@@ -27,7 +27,7 @@
 
 ---
 
-## 1. Architectural Overview
+## 2. Class Diagram
 
 ```mermaid
 graph TD
@@ -61,5 +61,85 @@ graph TD
     Stack -.->|Implements| ITR
     Queue -.->|Implements| ITR
 ```
+
+## 1. Architectural Overview & Class Diagrams
+
+The `STestEngine` framework provides an extensible, decoupled, and hierarchical test execution environment. Individual data structure and mathematical module tests are encapsulated into concrete leaf runners, which are then aggregated into higher-level domain suites (`sMathTester` and `sDSATester`). A static factory handles context-driven instantiation, while the top-level `STestEngine` drives full lifecycle execution.
+
+---
+
+### 1.1 Structural UML Class Diagram
+
+The following class diagram details the relationships, inheritance hierarchies, aggregation bounds, and design patterns utilized across the framework:
+
+```mermaid
+classDiagram
+    class ITestRunner {
+        <<Interface>>
+        +virtual ~ITestRunner()
+        +virtual RunAllTests()* void
+    }
+
+    class TestContext {
+        <<Enumeration>>
+        Math
+        DSA
+        All
+    }
+
+    class STestFactory {
+        +CreateTesters(ctx: TestContext)$ vector~unique_ptr~ITestRunner~~
+    }
+
+    class STestEngine {
+        -activeTesters: vector~unique_ptr~ITestRunner~~
+        +Execute(ctx: TestContext) int
+    }
+
+    class sMathTester {
+        -testers: vector~unique_ptr~ITestRunner~~
+        -Setup() void
+        +RunAllTests() void
+    }
+
+    class sDSATester {
+        -testers: vector~unique_ptr~ITestRunner~~
+        -Setup() void
+        +RunAllTests() void
+    }
+
+    class sCalcTester {
+        -TestCalculator() void
+        +RunAllTests() void
+    }
+
+    class sComplexTester {
+        -TestComplex() void
+        +RunAllTests() void
+    }
+
+    class sVectorTester {
+        -TestVector() void
+        -TestVectorT() void
+        +RunAllTests() void
+    }
+
+    %% Realization (Inheritance)
+    ITestRunner <|.. sMathTester : Realizes
+    ITestRunner <|.. sDSATester : Realizes
+    ITestRunner <|.. sCalcTester : Realizes
+    ITestRunner <|.. sComplexTester : Realizes
+    ITestRunner <|.. sVectorTester : Realizes
+
+    %% Aggregation / Composition (Composite Pattern)
+    sMathTester o-- "1..*" ITestRunner : Aggregates Sub-Runners
+    sDSATester o-- "1..*" ITestRunner : Aggregates Sub-Runners
+    STestEngine o-- "0..*" ITestRunner : Manages Active Runs
+
+    %% Dependencies
+    STestEngine ..> STestFactory : Requests Creation
+    STestFactory ..> TestContext : Evaluates Scope
+    STestFactory ..> sMathTester : Instantiates
+    STestFactory ..> sDSATester : Instantiates
 
 The test architecture provides an extensible, decoupled, and hierarchical test execution environment. Individual data structure and mathematical module tests are encapsulated into concrete leaf runners, which are then aggregated into higher-level domain suites (`sMathTester` and `sDSATester`). A static factory handles context-driven instantiation, while the top-level `STestEngine` drives full lifecycle execution.

@@ -58,7 +58,7 @@ The `STestEngine` framework provides an extensible, decoupled, and hierarchical 
 
 ---
 
-### 1.1 Class Diagram
+### 2.1 Class Diagram
 
 The following class diagram details the relationships, inheritance hierarchies, aggregation bounds, and design patterns utilized across the framework:
 
@@ -132,8 +132,9 @@ classDiagram
     STestFactory ..> sMathTester : Instantiates
     STestFactory ..> sDSATester : Instantiates
 ```
-### 1.2: Securence Diagram
+### 2.2: Securence Diagram
 
+```mermaid
 sequenceDiagram
     participant Main
     participant Engine as STestEngine
@@ -161,26 +162,23 @@ sequenceDiagram
     DSASuite-->>Engine: Suite Results
 
     Engine-->>Main: Execution Complete
+```
 
-
-### 1.3 Design Description
+### 2.3 Design Description
 The test architecture provides an extensible, decoupled, and hierarchical test execution environment. Individual data structure and mathematical module tests are encapsulated into concrete leaf runners, which are then aggregated into higher-level domain suites (`sMathTester` and `sDSATester`). A static factory handles context-driven instantiation, while the top-level `STestEngine` drives full lifecycle execution.
 
-## 2. Design Patterns Applied
+## 2.4 Design Patterns Applied
 - **Composite Pattern**: Suites (`sMathTester`, `sDSATester`) aggregate multiple `ITestRunner` implementations.  
 - **Factory Pattern**: `STestFactory` creates suites based on `TestContext`.  
 - **Strategy/Polymorphism**: Each tester implements `ITestRunner::RunAllTests()` differently. 
 
 ## 3. Interface & Factory Specification
 
-### 3.1 ITestRunner Interface
-```cpp
-class ITestRunner {
-public:
-    virtual ~ITestRunner() {}
-    virtual void RunAllTests() = 0;
-};
-```
+This section defines the **core abstractions** and the **factory mechanism** that enable extensibility and decoupling in the framework.  
+- The `ITestRunner` interface establishes a uniform contract for all test modules.  
+- The `TestContext` enumeration provides a clear way to select which domain of tests to execute (Math, DSA, or All).  
+- The `STestFactory` centralizes creation logic, ensuring that suites are instantiated consistently based on context, following the Factory Pattern.  
+
 ### 3.1 ITestRunner Interface
 ```cpp
 class ITestRunner {

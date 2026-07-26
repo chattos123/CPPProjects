@@ -9,25 +9,15 @@
 
 ## Table of Contents
 1. [Architectural Overview](#1-architectural-overview)
-2. [Design Patterns Applied](#2-design-patterns-applied)
+2. [Design](#2-design-patterns-applied)
 3. [Interface & Factory Specification](#3-interface--factory-specification)
    - [ITestRunner Interface](#31-itestrunner-interface)
    - [TestContext Enumeration](#32-testcontext-enumeration)
    - [STestFactory Header & Implementation](#33-stestfactory-header--implementation)
-4. [Composite Test Suite Aggregators](#4-composite-test-suite-aggregators)
-   - [sMathTester Suite](#41-smathtester-suite)
-   - [sDSATester Suite](#42-sdsatester-suite)
-5. [Concrete Leaf Test Implementations](#5-concrete-leaf-test-implementations)
-   - [sCalcTester Implementation](#51-scalctester-implementation)
-   - [sComplexTester Implementation](#52-scomplextester-implementation)
-   - [sVectorTester Implementation](#53-svectortester-implementation)
-6. [Top-Level Engine Orchestration](#6-top-level-engine-orchestration)
-   - [STestEngine Header & Implementation](#61-stestengine-header--implementation)
-   - [Main Entry Point Example](#62-main-entry-point-example)
 
 ---
 
-## 2. Class Diagram
+## 1. Architecture Overview
 
 ```mermaid
 graph TD
@@ -62,13 +52,13 @@ graph TD
     Queue -.->|Implements| ITR
 ```
 
-## 1. Architectural Overview & Class Diagrams
+## 2. Design
 
 The `STestEngine` framework provides an extensible, decoupled, and hierarchical test execution environment. Individual data structure and mathematical module tests are encapsulated into concrete leaf runners, which are then aggregated into higher-level domain suites (`sMathTester` and `sDSATester`). A static factory handles context-driven instantiation, while the top-level `STestEngine` drives full lifecycle execution.
 
 ---
 
-### 1.1 Structural UML Class Diagram
+### 1.1 Class Diagram
 
 The following class diagram details the relationships, inheritance hierarchies, aggregation bounds, and design patterns utilized across the framework:
 
@@ -142,7 +132,38 @@ classDiagram
     STestFactory ..> sMathTester : Instantiates
     STestFactory ..> sDSATester : Instantiates
 ```
+### 1.2: Securence Diagram
 
+sequenceDiagram
+    participant Main
+    participant Engine as STestEngine
+    participant Factory as STestFactory
+    participant MathSuite as sMathTester
+    participant DSASuite as sDSATester
+    participant Calc as sCalcTester
+    participant Complex as sComplexTester
+    participant Vector as sVectorTester
+
+    Main->>Engine: Execute(TestContext::All)
+    Engine->>Factory: CreateTesters(All)
+    Factory-->>Engine: [sMathTester, sDSATester]
+
+    Engine->>MathSuite: RunAllTests()
+    MathSuite->>Calc: RunAllTests()
+    Calc-->>MathSuite: Results
+    MathSuite->>Complex: RunAllTests()
+    Complex-->>MathSuite: Results
+    MathSuite-->>Engine: Suite Results
+
+    Engine->>DSASuite: RunAllTests()
+    DSASuite->>Vector: RunAllTests()
+    Vector-->>DSASuite: Results
+    DSASuite-->>Engine: Suite Results
+
+    Engine-->>Main: Execution Complete
+
+
+### 1.3 Design Description
 The test architecture provides an extensible, decoupled, and hierarchical test execution environment. Individual data structure and mathematical module tests are encapsulated into concrete leaf runners, which are then aggregated into higher-level domain suites (`sMathTester` and `sDSATester`). A static factory handles context-driven instantiation, while the top-level `STestEngine` drives full lifecycle execution.
 
 ## 2. Design Patterns Applied

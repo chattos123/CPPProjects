@@ -1,9 +1,10 @@
-/***********************************************************************
-* File: SHashMap.h
-* Description: Declares the templated SHashMap class for a type-safe
-*              hash-based dictionary container using SPair, SVectorT,
-*              and SListT for bucket storage.
-***********************************************************************/
+/**
+ * @file SHashMap.h
+ * @brief Declares the templated SHashMap class for a type-safe hash-based dictionary container.
+ * @author Soumyajit C
+ * @date 2026
+ */
+
 #pragma once
 
 #include "ExportMacro.h"
@@ -15,97 +16,123 @@
 #include <iostream>
 #include <stdexcept>
 
-/***********************************************************************
-* Class: SHashMap<K,V,Hash>
-*
-* Purpose: Provides a generic hash map container supporting insertion,
-*          lookup, deletion, and display of key–value pairs. Uses
-*          SPair<K,V> for storage, SVectorT for buckets, and SListT
-*          for collision handling via separate chaining.
-***********************************************************************/
+/**
+ * @class SHashMap
+ * @brief A generic hash map container supporting key-value pair insertion, lookup, removal, and bucket inspection.
+ * 
+ * Employs `SPair<K, V>` for key-value pair storage, `SVectorT` for internal bucket array management, 
+ * and `SListT` for separate chaining collision resolution.
+ *
+ * @tparam K Type of keys stored in the map. Must support equality comparison (`operator==`).
+ * @tparam V Type of values mapped to keys.
+ * @tparam Hash Functor type generating hash codes for keys (defaults to `std::hash<K>`).
+ */
 template <typename K, typename V, typename Hash = std::hash<K>>
 class SHashMap {
 private:
-    SVectorT<SListT<SPair<K,V>>> m_buckets;  ///< Buckets array
-    int m_size;                              ///< Number of elements
-    int m_capacity;                          ///< Current bucket capacity
-    Hash m_hasher;                           ///< Hash functor
+    SVectorT<SListT<SPair<K, V>>> m_buckets; ///< Dynamic array of singly-linked lists serving as hash buckets.
+    int m_size;                              ///< Total number of active key-value pairs stored in the hash map.
+    int m_capacity;                          ///< Current number of buckets in the map.
+    Hash m_hasher;                           ///< Instance of the hash functor used for key hashing.
 
-    /***********************************************************************
-    * Function: getBucketIndex
-    *
-    * \brief Computes the bucket index for a given key using the hash functor.
-    ***********************************************************************/
+    /**
+     * @brief Computes the target bucket array index for a given key using the hash functor.
+     *
+     * @param[in] key Reference to the key whose bucket index is to be computed.
+     * @return int Non-negative bucket index bounded within `[0, m_capacity - 1]`.
+     * @remark Internal helper method for bucket selection.
+     */
     int getBucketIndex(const K& key) const {
         return m_hasher(key) % m_capacity;
     }
 
-    /***********************************************************************
-    * Function: rehash
-    *
-    * \brief Doubles the bucket capacity and redistributes elements.
-    ***********************************************************************/
+    /**
+     * @brief Reallocates and doubles the bucket capacity, redistributing all existing elements.
+     *
+     * Invoked automatically when insertion causes the load factor to exceed the allowable threshold.
+     *
+     * @param None
+     * @return void
+     * @remark Re-allocates internal bucket arrays and recalculates bucket indices for all entries.
+     */
     void rehash();
 
 public:
-    /***********************************************************************
-    * Function: SHashMap
-    *
-    * \brief Constructs a hash map with an initial capacity and optional
-    *        custom hash functor.
-    ***********************************************************************/
+    /**
+     * @brief Constructs an empty SHashMap instance with an initial bucket capacity and an optional hash functor.
+     *
+     * @param[in] capacity Initial bucket count (defaults to 8).
+     * @param[in] h Functor object used for key hashing (defaults to `Hash()`).
+     */
     SHashMap(int capacity = 8, Hash h = Hash());
 
-    /***********************************************************************
-    * Function: insert
-    *
-    * \brief Inserts a key–value pair into the map. Updates value if key exists.
-    ***********************************************************************/
+    /**
+     * @brief Inserts a key-value pair into the map or updates the value if the key already exists.
+     *
+     * @param[in] key Key to insert or update.
+     * @param[in] value Value associated with the given key.
+     * @return void
+     * @remark Automatically triggers `rehash()` if the load factor exceeds capacity limits.
+     */
     void insert(const K& key, const V& value);
 
-    /***********************************************************************
-    * Function: contains
-    *
-    * \brief Checks if the given key exists in the map.
-    ***********************************************************************/
+    /**
+     * @brief Checks whether a specified key exists in the map.
+     *
+     * @param[in] key Key to search for in the hash map.
+     * @return true If the key exists within one of the collision chains.
+     * @return false If the key is not found.
+     * @remark Average time complexity is O(1).
+     */
     bool contains(const K& key) const;
 
-    /***********************************************************************
-    * Function: at
-    *
-    * \brief Returns a reference to the value associated with the key.
-    *        Throws std::out_of_range if key not found.
-    ***********************************************************************/
+    /**
+     * @brief Retrieves a mutable reference to the value associated with the specified key.
+     *
+     * @param[in] key Key whose mapped value is to be accessed.
+     * @return V& Mutable reference to the mapped value.
+     * @throws std::out_of_range If the key does not exist in the map.
+     * @remark Allows in-place modification of mapped values.
+     */
     V& at(const K& key);
 
-    /***********************************************************************
-    * Function: erase
-    *
-    * \brief Removes the key–value pair associated with the given key.
-    ***********************************************************************/
+    /**
+     * @brief Removes the key-value pair associated with the specified key from the map.
+     *
+     * @param[in] key Key of the entry to remove.
+     * @return void
+     * @remark Decrements `m_size` upon successful deletion. No-op if the key is not found.
+     */
     void erase(const K& key);
 
-    /***********************************************************************
-    * Function: display
-    *
-    * \brief Prints all key–value pairs in the map to standard output.
-    ***********************************************************************/
+    /**
+     * @brief Outputs all key-value pairs stored in the map to standard output.
+     *
+     * @param None
+     * @return void
+     * @remark Non-destructive display operation. Requires `operator<<` to be defined for `K` and `V`.
+     */
     void display() const;
 
-    /***********************************************************************
-    * Function: size
-    *
-    * \brief Returns the number of elements in the map.
-    ***********************************************************************/
+    /**
+     * @brief Retrieves the total number of key-value pairs stored in the map.
+     *
+     * @param None
+     * @return int Total element count.
+     * @remark Inline query method providing O(1) time complexity.
+     */
     int size() const { return m_size; }
 
-    /***********************************************************************
-    * Function: empty
-    *
-    * \brief Returns true if the map contains no elements.
-    ***********************************************************************/
+    /**
+     * @brief Checks whether the map contains no elements.
+     *
+     * @param None
+     * @return true If `m_size == 0`.
+     * @return false If the map contains one or more key-value pairs.
+     * @remark Inline query method providing O(1) time complexity.
+     */
     bool empty() const { return m_size == 0; }
 };
 
-// include template implementation
+// Include template implementation definitions
 #include "SHashMap.tpp"

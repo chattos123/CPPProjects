@@ -1,6 +1,8 @@
 /**
  * @file SString.cpp
  * @brief Implementation of the immutable SString class.
+ * @author Soumyajit C
+ * @date 2026
  *
  * Provides definitions for constructors, operators, and utility functions
  * for wide-character string handling and UTF-8/UTF-16 conversion.

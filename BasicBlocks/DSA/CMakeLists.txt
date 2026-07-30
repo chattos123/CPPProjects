@@ -3,6 +3,7 @@ add_library(DSALib SHARED
     source/SList.cpp
     source/SVector.cpp
     source/SQueue.cpp
+    source/SCircularQ.cpp
     source/SString.cpp
 )
 

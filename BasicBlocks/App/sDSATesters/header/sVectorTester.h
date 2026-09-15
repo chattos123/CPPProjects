@@ -16,7 +16,8 @@
  * @class sVectorTester
  * @brief Implements ITestRunner to run vector tests (SVector, SVectorT).
  */
-class sVectorTester : public ITestRunner {
+class sVectorTester : public ITestRunner 
+{
 public:
     /**
      * @brief Executes all vector-related tests.

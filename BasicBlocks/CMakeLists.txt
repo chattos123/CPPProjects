@@ -13,11 +13,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 
 # Add subdirectories for library and app
 add_subdirectory(SMathLib)
-add_subdirectory(App)
 add_subdirectory(DSA)
+add_subdirectory(Algo)
+add_subdirectory(App)
 
 # Install both targets into a dist/ folder
-install(TARGETS App SMathLib DSALib
+install(TARGETS App SMathLib DSALib AlgoLib
     RUNTIME DESTINATION dist/bin
     LIBRARY DESTINATION dist/bin
     ARCHIVE DESTINATION dist/lib

@@ -16,11 +16,15 @@ TestFactory/source/STestFactory.cpp
 
 target_link_libraries(App PRIVATE SMathLib)
 target_link_libraries(App PRIVATE DSALib)
+target_link_libraries(App PRIVATE AlgoLib)
 
 target_include_directories(App PRIVATE
     ${CMAKE_SOURCE_DIR}/SMathLib
     ${CMAKE_SOURCE_DIR}/SMathLib/MathOperations/Header
     ${CMAKE_SOURCE_DIR}/DSA/header
+    ${CMAKE_SOURCE_DIR}/Algo/header
+    ${CMAKE_SOURCE_DIR}/Algo/Sort/interface
+    ${CMAKE_SOURCE_DIR}/Algo/Sort/header
     ${CMAKE_SOURCE_DIR}/App/TestFactory/header
     ${CMAKE_SOURCE_DIR}/App/TestEngine/header
     ${CMAKE_SOURCE_DIR}/App/sMathTesters/header

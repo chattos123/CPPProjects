@@ -1,0 +1,45 @@
+#include "sTreeTester.h"
+
+void sTreeTester::TestSStrictBTree() 
+{
+    std::cout << "***Testing SStrictBTree...***\n";
+    SStrictBTree<int> tree;
+
+    // Insert elements
+    tree.InsertStrict(10);
+    tree.InsertStrict(20);
+    tree.InsertStrict(30);
+
+    // Display in-order
+    std::cout << "In-order traversal: ";
+    tree.DisplayInOrder();
+    std::cout << "\n";
+
+    // Attempt to insert violating strict binary property
+    if (!tree.InsertStrict(40)) 
+    {
+        std::cout << "Insertion of 40 failed due to strict binary property.\n";
+    }
+
+    std::cout << "***SStrictBTree tests completed.***\n\n";
+}
+
+/**
+ * @brief Main entry point for running the test suite.
+ *
+ * Sequentially invokes TestSStrictBTree() with visual section banners.
+ *
+ * @param None
+ * @return void
+ * @remark Designed to be called directly from main() or an external test driver.
+ */
+void sTreeTester::RunAllTests()
+{
+    std::cout << "\n==============================\n";
+    std::cout << "Running all Tree tests...\n";
+    std::cout << "==============================\n";
+
+    TestSStrictBTree();
+
+    std::cout << "\n==============================\n";
+}

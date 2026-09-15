@@ -1,30 +1,24 @@
 // SComplex.h
 #pragma once
+#include "SMathLib.h"
 #include <iostream>
 #include <cmath>
 
-#ifdef MATHLIB_EXPORTS
-#define SMATHLIB_API __declspec(dllexport)
-#else
-#define SMATHLIB_API __declspec(dllimport)
-#endif
 
-class SMATHLIB_API SComplex
+class SMATHLIB_API SComplex 
 {
-    private:
+private:
     double m_dRealPart;
     double m_dImagPart;
 
 public:
-    // Constructors
+    // Constructors & Destructor
     SComplex();
     SComplex(double r, double i);
     SComplex(const SComplex& c);
-
-    // Destructor
     ~SComplex();
 
-    // Members
+    // Data Accessors
     void set_data(double r, double i);
     void set_data(const SComplex& cx);
     void get_data(double& r, double& i) const;
@@ -32,6 +26,7 @@ public:
     double get_imag() const;
     void empty();
 
+    // Math Methods (ensure all parameters are const SComplex&)
     void add_data(const SComplex& cx);
     void sub_data(const SComplex& cx);
     void mul_data(const SComplex& cx);
@@ -39,38 +34,35 @@ public:
 
     double get_mod() const;
     double get_arg() const;
-
     void display() const;
 
-    // Operator overloading
+    // Assignment & Compound Operators
+    SComplex& operator=(const SComplex& s);
+    SComplex& operator+=(const SComplex& s);
+    SComplex& operator-=(const SComplex& s);
+
+    // Arithmetic Operators
     SComplex operator+(const SComplex& s) const;
     SComplex operator-(const SComplex& s) const;
     SComplex operator*(const SComplex& s) const;
     SComplex operator/(const SComplex& s) const;
 
-    SComplex& operator=(const SComplex& s);
+    // Increment / Decrement
+    SComplex& operator++();       // Pre-increment
+    SComplex& operator--();       // Pre-decrement
+    SComplex operator++(int);     // Post-increment
+    SComplex operator--(int);     // Post-decrement
 
-    // Increment/Decrement
-    SComplex& operator++();    // prefix
-    SComplex& operator--();    // prefix
-    SComplex operator++(int);  // postfix
-    SComplex operator--(int);  // postfix
+    // Friend Operators with double
+    friend SMATHLIB_API SComplex operator+(const SComplex& s, double f);
+    friend SMATHLIB_API SComplex operator+(double f, const SComplex& s);
+    friend SMATHLIB_API SComplex operator-(const SComplex& s, double f);
+    friend SMATHLIB_API SComplex operator-(double f, const SComplex& s);
+    friend SMATHLIB_API SComplex operator*(const SComplex& s, double f);
+    friend SMATHLIB_API SComplex operator*(double f, const SComplex& s);
+    friend SMATHLIB_API SComplex operator/(const SComplex& s, double f);
+    friend SMATHLIB_API SComplex operator/(double f, const SComplex& s);
 
-    // Compound assignment
-    SComplex& operator+=(const SComplex& s);
-    SComplex& operator-=(const SComplex& s);
-
-    // Friend functions for double operations
-    friend SComplex operator+(const SComplex& s, double f);
-    friend SComplex operator+(double f, const SComplex& s);
-    friend SComplex operator-(const SComplex& s, double f);
-    friend SComplex operator-(double f, const SComplex& s);
-    friend SComplex operator*(const SComplex& s, double f);
-    friend SComplex operator*(double f, const SComplex& s);
-    friend SComplex operator/(const SComplex& s, double f);
-    friend SComplex operator/(double f, const SComplex& s);
-
-    // Stream output
-    SMATHLIB_API friend std::ostream& operator<<(std::ostream& os, const SComplex& c);
+    friend SMATHLIB_API std::ostream& operator<<(std::ostream& os, const SComplex& c);
 };
 

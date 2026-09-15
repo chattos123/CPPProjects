@@ -13,6 +13,8 @@
 #include "SCircularQT.h"
 #include "SListQT.h"
 #include "SListCircularQT.h"
+#include "SAssendingPriorityQT.h"
+#include "SDecendingPriorityQT.h"
 #include <iostream>
 #include <string>
 
@@ -70,5 +72,32 @@ private:
      * @brief Tests exception handling (underflow/invalid ops) for SListCircularQT.
      */
     void TestSListCircularQTNegative();
+      /**
+     * @brief Tests the behavior of the ascending priority queue (SAssendingPriorityQT).
+     */
+    void TestSAssendingPriorityQT();
+    /**
+     * @brief Tests exception handling (underflow/empty ops) for SAssendingPriorityQT.
+     */
+    void TestSAssendingPriorityQTNegative();
+    /**
+     * @brief Performance benchmark for SAssendingPriorityQT under bulk operations.
+     */
+    void TestSAssendingPriorityQTPerformance();
+    /**
+     * @brief Tests the behavior of the descending priority queue (SDecendingPriorityQT).
+     */
+    void TestSDecendingPriorityQT();
+    /**
+     * @brief Tests exception handling (underflow/empty ops) for SDecendingPriorityQT.
+     */
+    void TestSDecendingPriorityQTNegative();
+
+    /**
+     * @brief Performance benchmark for SDecendingPriorityQT under bulk operations.
+     */
+    void TestSDecendingPriorityQTPerformance();
+
+
 
 };

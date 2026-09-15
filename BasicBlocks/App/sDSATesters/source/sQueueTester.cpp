@@ -5,6 +5,7 @@
  */
 
 #include "sQueueTester.h"
+#include <chrono>
 
 /**
  * @brief Tests the behavior of the SQueue container.
@@ -254,6 +255,239 @@ void sQueueTester::TestSListCircularQTNegative()
 }
 
 /**
+ * @brief Tests the behavior of the ascending priority queue (SAssendingPriorityQT).
+ */
+void sQueueTester::TestSAssendingPriorityQT() 
+{
+    std::cout << "***Testing SAssendingPriorityQT<int>...***\n";
+    SAssendingPriorityQT<int> pq;
+    pq.Enqueue(30);
+    pq.Enqueue(10);
+    pq.Enqueue(20);
+
+    std::cout << "Front element (smallest): " << pq.Front() << "\n"; // should be 10
+    std::cout << "Dequeue: " << pq.Dequeue() << "\n";                // removes 10
+    std::cout << "Front element after dequeue: " << pq.Front() << "\n"; // should be 20
+
+    std::cout << "***Testing SAssendingPriorityQT<std::string>...***\n";
+    SAssendingPriorityQT<std::string> strPQ;
+    strPQ.Enqueue("Gamma");
+    strPQ.Enqueue("Alpha");
+    strPQ.Enqueue("Beta");
+
+    std::cout << "Front element (alphabetically smallest): " << strPQ.Front() << "\n"; // should be "Alpha"
+    std::cout << "Dequeue: " << strPQ.Dequeue() << "\n";                               // removes "Alpha"
+    std::cout << "Front element after dequeue: " << strPQ.Front() << "\n";             // should be "Beta"
+
+    std::cout << "***SAssendingPriorityQT tests completed.***\n\n";
+}
+
+/**
+ * @brief Tests exception handling (underflow/empty ops) for SAssendingPriorityQT.
+ */
+void sQueueTester::TestSAssendingPriorityQTNegative() 
+{
+    std::cout << "***Testing SAssendingPriorityQT Negative Cases...***\n";
+    SAssendingPriorityQT<int> pq;
+
+    // Dequeue on empty
+    try 
+    {
+        std::cout << "Attempting Dequeue on empty priority queue...\n";
+        pq.Dequeue();
+    } 
+    catch (const std::out_of_range& e) 
+    {
+        std::cout << "Caught exception: " << e.what() << "\n";
+    }
+
+    // Front on empty
+    try 
+    {
+        std::cout << "Attempting Front on empty priority queue...\n";
+        pq.Front();
+    } catch (const std::out_of_range& e) 
+    {
+        std::cout << "Caught exception: " << e.what() << "\n";
+    }
+
+    // Add some elements, then clear by dequeuing all
+    pq.Enqueue(5);
+    pq.Enqueue(1);
+    pq.Enqueue(3);
+
+    std::cout << "Dequeued: " << pq.Dequeue() << "\n"; // 1
+    std::cout << "Dequeued: " << pq.Dequeue() << "\n"; // 3
+    std::cout << "Dequeued: " << pq.Dequeue() << "\n"; // 5
+
+    // Now empty again, try Dequeue
+    try 
+    {
+        std::cout << "Attempting Dequeue after clearing priority queue...\n";
+        pq.Dequeue();
+    } 
+    catch (const std::out_of_range& e) 
+    {
+        std::cout << "Caught exception: " << e.what() << "\n";
+    }
+
+    std::cout << "***SAssendingPriorityQT Negative tests completed.***\n\n";
+}
+
+/**
+ * @brief Performance benchmark for SAssendingPriorityQT under bulk operations.
+ */
+void sQueueTester::TestSAssendingPriorityQTPerformance() 
+{
+    std::cout << "***Performance Test: SAssendingPriorityQT<int>...***\n";
+    SAssendingPriorityQT<int> pq;
+
+    const int N = 20000; // adjust size for stress test
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // Bulk enqueue in random order
+    for (int i = N; i > 0; --i) 
+    {
+        pq.Enqueue(i);
+    }
+
+    auto mid = std::chrono::high_resolution_clock::now();
+
+    // Bulk dequeue
+    for (int i = 0; i < N; ++i)
+    {
+        pq.Dequeue();
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto enqueueTime = std::chrono::duration_cast<std::chrono::milliseconds>(mid - start).count();
+    auto dequeueTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - mid).count();
+
+    std::cout << "Enqueue " << N << " elements took: " << enqueueTime << " ms\n";
+    std::cout << "Dequeue " << N << " elements took: " << dequeueTime << " ms\n";
+    std::cout << "***SAssendingPriorityQT Performance test completed.***\n\n";
+}
+
+/**
+ * @brief Tests the behavior of the descending priority queue (SDecendingPriorityQT).
+ */
+void sQueueTester::TestSDecendingPriorityQT() 
+{
+    std::cout << "***Testing SDecendingPriorityQT<int>...***\n";
+    SDecendingPriorityQT<int> pq;
+    pq.Enqueue(10);
+    pq.Enqueue(30);
+    pq.Enqueue(20);
+
+    std::cout << "Front element (largest): " << pq.Front() << "\n"; // should be 30
+    std::cout << "Dequeue: " << pq.Dequeue() << "\n";               // removes 30
+    std::cout << "Front element after dequeue: " << pq.Front() << "\n"; // should be 20
+
+    std::cout << "***Testing SDecendingPriorityQT<std::string>...***\n";
+    SDecendingPriorityQT<std::string> strPQ;
+    strPQ.Enqueue("Alpha");
+    strPQ.Enqueue("Gamma");
+    strPQ.Enqueue("Beta");
+
+    std::cout << "Front element (alphabetically largest): " << strPQ.Front() << "\n"; // should be "Gamma"
+    std::cout << "Dequeue: " << strPQ.Dequeue() << "\n";                              // removes "Gamma"
+    std::cout << "Front element after dequeue: " << strPQ.Front() << "\n";            // should be "Beta"
+
+    std::cout << "***SDecendingPriorityQT tests completed.***\n\n";
+}
+
+/**
+ * @brief Tests exception handling (underflow/empty ops) for SDecendingPriorityQT.
+ */
+void sQueueTester::TestSDecendingPriorityQTNegative() 
+{
+    std::cout << "***Testing SDecendingPriorityQT Negative Cases...***\n";
+    SDecendingPriorityQT<int> pq;
+
+    // Dequeue on empty
+    try 
+    {
+        std::cout << "Attempting Dequeue on empty descending priority queue...\n";
+        pq.Dequeue();
+    } 
+    catch (const std::out_of_range& e) 
+    {
+        std::cout << "Caught exception: " << e.what() << "\n";
+    }
+
+    // Front on empty
+    try {
+        std::cout << "Attempting Front on empty descending priority queue...\n";
+        pq.Front();
+    } 
+    catch (const std::out_of_range& e) {
+        std::cout << "Caught exception: " << e.what() << "\n";
+    }
+
+    // Add some elements, then clear by dequeuing all
+    pq.Enqueue(100);
+    pq.Enqueue(50);
+    pq.Enqueue(75);
+
+    std::cout << "Dequeued: " << pq.Dequeue() << "\n"; // 100
+    std::cout << "Dequeued: " << pq.Dequeue() << "\n"; // 75
+    std::cout << "Dequeued: " << pq.Dequeue() << "\n"; // 50
+
+    // Now empty again, try Dequeue
+    try 
+    {
+        std::cout << "Attempting Dequeue after clearing descending priority queue...\n";
+        pq.Dequeue();
+    } 
+    catch (const std::out_of_range& e) 
+    {
+        std::cout << "Caught exception: " << e.what() << "\n";
+    }
+
+    std::cout << "***SDecendingPriorityQT Negative tests completed.***\n\n";
+}
+
+/**
+ * @brief Performance benchmark for SDecendingPriorityQT under bulk operations.
+ */
+void sQueueTester::TestSDecendingPriorityQTPerformance() 
+{
+    std::cout << "***Performance Test: SDecendingPriorityQT<int>...***\n";
+    SDecendingPriorityQT<int> pq;
+
+    const int N = 50000; // adjust size for stress test
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // Bulk enqueue in random order
+    for (int i = 0; i < N; ++i) 
+    {
+        pq.Enqueue(rand() % N);
+    }
+
+    auto mid = std::chrono::high_resolution_clock::now();
+
+    // Bulk dequeue
+    for (int i = 0; i < N; ++i) {
+        pq.Dequeue();
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto enqueueTime = std::chrono::duration_cast<std::chrono::milliseconds>(mid - start).count();
+    auto dequeueTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - mid).count();
+
+    std::cout << "Enqueue " << N << " elements took: " << enqueueTime << " ms\n";
+    std::cout << "Dequeue " << N << " elements took: " << dequeueTime << " ms\n";
+    std::cout << "***SDecendingPriorityQT Performance test completed.***\n\n";
+}
+
+
+
+
+
+
+/**
  * @brief Executes all queue-related tests.
  */
 void sQueueTester::RunAllTests()
@@ -270,6 +504,12 @@ void sQueueTester::RunAllTests()
     TestSListCircularQT();
     TestCircularQTIterators();
     TestCircularQTNegative();
+    TestSAssendingPriorityQT();
+    TestSAssendingPriorityQTNegative();
+    TestSAssendingPriorityQTPerformance();
+    TestSDecendingPriorityQT();
+    TestSDecendingPriorityQTNegative();
+    TestSDecendingPriorityQTPerformance();
 
     std::cout << "==============================\n";
     std::cout << "Queue tests completed.\n";

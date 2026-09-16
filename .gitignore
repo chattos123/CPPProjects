@@ -23,6 +23,14 @@
 *.dll
 *.so.*
 
+# Ignore local user CMake presets
+CMakeUserPresets.json
+
+# Ignore user settings and workspace cache in VS Code
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+
 
 # Fortran module files
 *.mod

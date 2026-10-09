@@ -2,13 +2,8 @@
 #include "SMathLib.h"
 #include <stdexcept>
 
-#ifdef MATHLIB_EXPORTS
-#define SMATHLIB_API __declspec(dllexport)
-#else
-#define SMATHLIB_API __declspec(dllimport)
-#endif
-
-class SMATHLIB_API SCalculator {
+class SMATHLIB_API SCalculator 
+{
 public:
     double add(double a, double b);
     double subtract(double a, double b);

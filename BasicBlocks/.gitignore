@@ -41,6 +41,7 @@
 *.app
 
 # Build directories
+dist/
 build/
 Build/
 build-*/

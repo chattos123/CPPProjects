@@ -15,11 +15,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 add_subdirectory(SMathLib)
 add_subdirectory(DSA)
 add_subdirectory(Algo)
+add_subdirectory(Concurrency)
 add_subdirectory(App)
 
 # Install both targets into a dist/ folder
-install(TARGETS App SMathLib DSALib AlgoLib
+install(TARGETS App SMathLib DSALib AlgoLib Concurrency
     RUNTIME DESTINATION dist/bin
     LIBRARY DESTINATION dist/bin
     ARCHIVE DESTINATION dist/lib
+)
+
+# Install concurrency config into dist/bin/Concurrency/Socket
+install(FILES ${CMAKE_SOURCE_DIR}/Concurrency/Process/config.ini
+    DESTINATION dist/bin/Concurrency/Socket
 )

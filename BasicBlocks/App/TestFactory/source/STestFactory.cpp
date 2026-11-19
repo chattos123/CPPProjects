@@ -45,12 +45,19 @@ std::vector<std::unique_ptr<ITestRunner>> STestFactory::CreateTesters(TestContex
             testers.emplace_back(std::make_unique<sDSATester>());
         }
             break;
-
+        case TestContext::Concurrency:
+        {
+            std::cout << "Factory: Providing Concurrency testers...\n";
+            // Assuming a hypothetical sCocurrencyTester exists
+            testers.emplace_back(std::make_unique<sCocurrencyTester>());
+        }
+            break;
         case TestContext::All:
         {
             std::cout << "Factory: Providing ALL testers (Math + DSA)...\n";
             testers.emplace_back(std::make_unique<sMathTester>());
             testers.emplace_back(std::make_unique<sDSATester>());
+            testers.emplace_back(std::make_unique<sCocurrencyTester>());
         }
             break;
 

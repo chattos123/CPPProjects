@@ -14,6 +14,7 @@
 #include "ITestRunner.h"
 #include "sMathTester.h"
 #include "sDSATester.h"
+#include "sCocurrencyTester.h"
 #include <vector>
 #include <memory>
 #include <iostream>
@@ -26,6 +27,7 @@ enum class TestContext
 {
     Math,  ///< Run only mathematical component tests (SCalculator, SComplex).
     DSA,   ///< Run only Data Structures & Algorithms component tests.
+    Concurrency, ///< Run only concurrency component tests (STCPServer, STCPClient).
     All    ///< Run all available test suites across all domains.
 };
 

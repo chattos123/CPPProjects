@@ -49,9 +49,12 @@ CMakeUserPresets.json
 *.app
 
 # Build directories
+dist/
 build/
 Build/
 build-*/
+BasicBlocks/build-*/
+BasicBlocks/dist/
 
 # CMake generated files
 CMakeFiles/
